@@ -46,10 +46,18 @@ class BookAdmin(ModelAdmin, TabbedTranslationAdmin):
     ]
    
 
-
 @admin.register(BookimageModel)
 class BookimageAdmin(ModelAdmin):
     list_display = (
         "id",
         "__str__",
+        'book_name',
+        'book_is_discount'
     )
+    
+    def book_name(self, obj):
+        return obj.book.name if obj.book else "Kitob Topilmadi"
+    
+    def book_is_discount(self, obj):
+        return obj.book.is_discount if obj.book else "Narx nomalum"
+    
