@@ -1,20 +1,15 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
-
-from ..models import BannerimageModel, BannerModel
+from modeltranslation.admin import TabbedTranslationAdmin
+from ..models import BannerModel
 
 
 @admin.register(BannerModel)
-class BannerAdmin(ModelAdmin):
+class BannerAdmin(ModelAdmin, TabbedTranslationAdmin):
     list_display = (
         "id",
         "__str__",
     )
 
 
-@admin.register(BannerimageModel)
-class BannerimageAdmin(ModelAdmin):
-    list_display = (
-        "id",
-        "__str__",
-    )
+

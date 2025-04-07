@@ -5,10 +5,10 @@ from django_core.models import AbstractBaseModel
 
 class BannerModel(AbstractBaseModel):
     name = models.CharField(_("Nomi"), max_length=255)
-    
+    image = models.ImageField(_("Rasm"), upload_to="banner-image/")    
     
     def __str__(self):
-        return self.name
+        return self.name or 'banner Item'
 
     @classmethod
     def _create_fake(self):

@@ -106,6 +106,20 @@ AUTH_PASSWORD_VALIDATORS = [
     ]
 ]
 
+
+from django.conf.locale import LANG_INFO
+
+LANG_INFO.update(
+    {
+        "kril": {
+            "bidi": False,  # O‘ngdan chapga yo‘nalish (False - Chapdan o‘ngga)
+            "code": "kril",
+            "name": "Kril",
+            "name_local": "Крил",
+        },
+    }
+)
+
 TIME_ZONE = "Asia/Tashkent"
 USE_I18N = True
 USE_TZ = True
@@ -132,7 +146,7 @@ VITE_APP_DIR = os.path.join(BASE_DIR, "resources/static/vite")
 
 LANGUAGES = (
     ("ru", _("Russia")),
-    ("en", _("English")),
+    ("kril", _("Kyril")),
     ("uz", _("Uzbek")),
 )
 LOCALE_PATHS = [os.path.join(BASE_DIR, "resources/locale")]
@@ -152,13 +166,13 @@ CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS").split(",")
 SILKY_AUTHORISATION = True
 SILKY_PYTHON_PROFILER = True
 
-MODELTRANSLATION_LANGUAGES = ("uz", "ru", "en")
+MODELTRANSLATION_LANGUAGES = ("uz", "kril", "ru")
 MODELTRANSLATION_DEFAULT_LANGUAGE = "uz"
 
 PARLER_LANGUAGES = {
     None: (
         {'code': 'uz',},
-        {'code': 'en',},
+        {'code': 'kril',},
         {'code': 'ru',},
     ),
     'default': {
@@ -183,3 +197,5 @@ JST_LANGUAGES = [
         "name": "Russia",
     }
 ]
+
+
