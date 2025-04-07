@@ -4,7 +4,11 @@ from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from ..models import BannerModel
-from ..serializers.banner import CreateBannerSerializer, ListBannerSerializer, RetrieveBannerSerializer
+from ..serializers.banner import (
+    CreateBannerSerializer,
+    ListBannerSerializer,
+    RetrieveBannerSerializer,
+)
 
 
 @extend_schema(tags=["banner"])
@@ -19,3 +23,4 @@ class BannerView(BaseViewSetMixin, ReadOnlyModelViewSet):
         "retrieve": RetrieveBannerSerializer,
         "create": CreateBannerSerializer,
     }
+

@@ -6,3 +6,4 @@ from ..models import BannerModel
 @register(BannerModel)
 class BannerTranslation(TranslationOptions):
     fields = []
+
