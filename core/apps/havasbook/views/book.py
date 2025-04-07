@@ -3,8 +3,15 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from ..models import BookModel
-from ..serializers.book import CreateBookSerializer, ListBookSerializer, RetrieveBookSerializer
+from ..models import BookimageModel, BookModel
+from ..serializers.book import (
+    CreateBookimageSerializer,
+    CreateBookSerializer,
+    ListBookimageSerializer,
+    ListBookSerializer,
+    RetrieveBookimageSerializer,
+    RetrieveBookSerializer,
+)
 
 
 @extend_schema(tags=["book"])
@@ -18,4 +25,18 @@ class BookView(BaseViewSetMixin, ReadOnlyModelViewSet):
         "list": ListBookSerializer,
         "retrieve": RetrieveBookSerializer,
         "create": CreateBookSerializer,
+    }
+
+
+@extend_schema(tags=["bookImage"])
+class BookimageView(BaseViewSetMixin, ReadOnlyModelViewSet):
+    queryset = BookimageModel.objects.all()
+    serializer_class = ListBookimageSerializer
+    permission_classes = [AllowAny]
+
+    action_permission_classes = {}
+    action_serializer_class = {
+        "list": ListBookimageSerializer,
+        "retrieve": RetrieveBookimageSerializer,
+        "create": CreateBookimageSerializer,
     }
