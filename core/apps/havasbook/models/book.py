@@ -8,6 +8,13 @@ class BookModel(AbstractBaseModel):
     name = models.CharField(_("name"), max_length=255)
 
     description = models.TextField(_("Mahsulot tavsifi"), null=True, blank=True)
+    category = models.ForeignKey(
+        "havasbook.CategoryModel",
+        verbose_name=_("Kategoriylar"),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
     image = models.ImageField(_("Rasm"), upload_to="book-image/", null=True, blank=True)
 
     original_price = models.DecimalField(
