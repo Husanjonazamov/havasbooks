@@ -78,4 +78,26 @@ PAGES = [
         ]
 
     },
+    {
+        "title": _("Savatlar bo'limi"),
+        "separator": True,  # Top border
+        "items": [
+            {
+                "title": _("Foydalanuvchi Savati"),
+                "icon": "shopping_cart",  # Mos icon (shopping cart)
+                "link": reverse_lazy("admin:havasbook_cartmodel_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_user"
+                ),
+            },
+            {
+                "title": _("Savatdagi elementlar"),
+                "icon": "list_alt",  # Mos icon (list of items)
+                "link": reverse_lazy("admin:havasbook_cartitemmodel_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_group"
+                ),
+            },
+        ]
+    },
 ]

@@ -15,7 +15,7 @@ class CartModel(AbstractBaseModel):
         default=0.00
     )
     def __str__(self):
-        return self.user.username
+        return self.user.phone
     
     def update_total_price(self):
         """Umumiy narxni yangilash."""
