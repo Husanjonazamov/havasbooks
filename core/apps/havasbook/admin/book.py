@@ -20,18 +20,13 @@ class BookAdmin(ModelAdmin, TabbedTranslationAdmin):
         "__str__",
         'name',
         'price',
+        'quantity',
         'is_discount',
-        'image'
     )
     
     list_filter = ('is_discount',)
     search_fields = ('original_price',)
     
-    fieldsets = (
-        (None, {
-            'fields': ('original_price', 'discount_percent', 'price', 'is_discount', 'image')
-        }),
-    )
 
     def save_model(self, request, obj, form, change):
         if obj.is_discount and obj.discount_percent is not None:
@@ -44,7 +39,6 @@ class BookAdmin(ModelAdmin, TabbedTranslationAdmin):
     inlines = [
         BookimageInline,
     ]
-   
 
 @admin.register(BookimageModel)
 class BookimageAdmin(ModelAdmin):

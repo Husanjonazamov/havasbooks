@@ -5,4 +5,6 @@ from ..models import CategoryModel
 
 @register(CategoryModel)
 class CategoryTranslation(TranslationOptions):
-    fields = []
+    fields = [
+        'name'
+    ]

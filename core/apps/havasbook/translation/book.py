@@ -5,7 +5,10 @@ from ..models import BookimageModel, BookModel
 
 @register(BookModel)
 class BookTranslation(TranslationOptions):
-    fields = ["name"]
+    fields = [
+        "name",
+        "description",
+    ]
 
 
 @register(BookimageModel)
