@@ -1,7 +1,7 @@
 from django.contrib.auth import models as auth_models
 from django.db import models
 
-from ..choices import RoleChoice
+from ..choices import RoleChoice, JinsChoice
 from ..managers import UserManager
 
 
@@ -15,6 +15,11 @@ class User(auth_models.AbstractUser):
         max_length=255,
         choices=RoleChoice,
         default=RoleChoice.USER,
+    )
+    jins = models.CharField(
+        max_length=100,
+        choices=JinsChoice.choices,
+        null=True, blank=True
     )
 
     USERNAME_FIELD = "phone"
