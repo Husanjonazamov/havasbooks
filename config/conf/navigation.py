@@ -53,7 +53,7 @@ PAGES = [
         "items": [
             {
                 "title": _("Bannerlar"),
-                "icon": "person_add",
+                "icon": "campaign", 
                 "link": reverse_lazy("admin:havasbook_bannermodel_changelist"),
                 "permission": lambda request: user_has_group_or_permission(
                     request.user, "view_user"
@@ -61,7 +61,7 @@ PAGES = [
             },
             {
                 "title": _("Kitoblar"),
-                "icon": "groups_2",
+                "icon": "book",  # Kitoblar uchun mos icon
                 "link": reverse_lazy("admin:havasbook_bookmodel_changelist"),
                 "permission": lambda request: user_has_group_or_permission(
                     request.user, "view_group"
@@ -69,12 +69,13 @@ PAGES = [
             },
             {
                 "title": _("Kategoryalar"),
-                "icon": "person_add",
+                "icon": "category",  # Kategoryalar uchun mos icon
                 "link": reverse_lazy("admin:havasbook_categorymodel_changelist"),
                 "permission": lambda request: user_has_group_or_permission(
                     request.user, "view_user"
                 ),
             },
-        ],
+        ]
+
     },
 ]
