@@ -9,7 +9,12 @@ class CartAdmin(ModelAdmin):
     list_display = (
         "id",
         "__str__",
+        "user_name",
+        'total_price'
     )
+    
+    def user_name(self, obj):
+        return obj.user.first_name if obj.user else "Kitob Topilmadi"
 
 
 @admin.register(CartitemModel)
