@@ -19,6 +19,7 @@ class OrderAdmin(ModelAdmin):
         return obj.user.first_name
 
 
+
 @admin.register(OrderitemModel)
 class OrderitemAdmin(ModelAdmin):
     list_display = (

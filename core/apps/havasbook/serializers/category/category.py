@@ -6,9 +6,10 @@ from ...models import CategoryModel
 class BaseCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = CategoryModel
-        exclude = [
-            "created_at",
-            "updated_at",
+        fields = [
+            'id',
+            'name',
+            'image'
         ]
 
 

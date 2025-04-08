@@ -15,6 +15,8 @@ from drf_spectacular.views import (SpectacularAPIView, SpectacularRedocView,
 ################
 urlpatterns = [
     path("", include("core.apps.accounts.urls")),
+    path("", include("core.apps.havasbook.urls")),
+    
 ]
 
 
