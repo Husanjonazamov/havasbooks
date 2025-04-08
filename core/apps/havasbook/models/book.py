@@ -46,6 +46,7 @@ class BookModel(AbstractBaseModel):
         null=True,
         blank=True,
     )
+    views = models.PositiveIntegerField(default=0, verbose_name="Ko'rilganlar soni")
 
 
     def __str__(self):
@@ -57,15 +58,6 @@ class BookModel(AbstractBaseModel):
         else:
             self.price = self.original_price
         super().save(*args, **kwargs)
-
-
-    def image_preview(self):
-        if self.image:
-            return mark_safe(f'<img src="{self.image.url}" width="100" />')  
-        return "No image"
-
-    image_preview.short_description = 'Rasm'
-
 
     @classmethod
     def _create_fake(self):

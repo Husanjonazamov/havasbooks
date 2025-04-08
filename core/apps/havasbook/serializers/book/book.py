@@ -3,7 +3,6 @@ from ...models import BookModel
 from decimal import Decimal
 
 
-
 class BaseBookSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField()
     class Meta:
