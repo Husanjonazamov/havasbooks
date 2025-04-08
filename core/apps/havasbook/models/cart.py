@@ -14,6 +14,7 @@ class CartModel(AbstractBaseModel):
         decimal_places=2,
         default=0.00
     )
+    
     def __str__(self):
         return self.user.first_name
     
