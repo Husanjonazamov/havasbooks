@@ -29,10 +29,10 @@ class CartView(BaseViewSetMixin, ModelViewSet):
 
 
 @extend_schema(tags=["cartItem"])
-class CartitemView(BaseViewSetMixin, ReadOnlyModelViewSet):
+class CartitemView(BaseViewSetMixin, ModelViewSet):
     queryset = CartitemModel.objects.all()
     serializer_class = ListCartitemSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     action_permission_classes = {}
     action_serializer_class = {
