@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django_core.models import AbstractBaseModel
 
 
+
 class CartModel(AbstractBaseModel):
     name = models.CharField(_("name"), max_length=255)
 
