@@ -1,13 +1,39 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_core.models import AbstractBaseModel
+from core.apps.accounts.models.user import User
+from geopy.geocoders import Nominatim
 
 
 class LocationModel(AbstractBaseModel):
-    name = models.CharField(_("name"), max_length=255)
+    name = models.CharField(_("name"), max_length=255, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="locations") 
+    latitude = models.DecimalField(
+        _("Kenglik"),
+        max_digits=9,
+        decimal_places=6
+    )
+    longitude = models.DecimalField(
+        _("Uzunlik"),
+        max_digits=9,
+        decimal_places=6
+    )
 
     def __str__(self):
         return self.name
+    
+    
+    def get_address(self):
+        geolocator = Nominatim(user_agent="myapp")
+        location = geolocator.reverse((self.latitude, self.longitude), language='en')
+        if location:
+            return location.address
+        return _("Address not found")
+
+    def save(self, *args, **kwargs):
+        if not self.name:
+            self.name = self.get_address()
+        super(LocationModel, self).save(*args, **kwargs)
 
     @classmethod
     def _create_fake(self):
