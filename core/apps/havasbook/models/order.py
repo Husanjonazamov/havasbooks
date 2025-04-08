@@ -19,3 +19,21 @@ class OrderModel(AbstractBaseModel):
         db_table = "order"
         verbose_name = _("OrderModel")
         verbose_name_plural = _("OrderModels")
+
+
+class OrderitemModel(AbstractBaseModel):
+    name = models.CharField(_("name"), max_length=255)
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def _create_fake(self):
+        return self.objects.create(
+            name="Test",
+        )
+
+    class Meta:
+        db_table = "orderITem"
+        verbose_name = _("OrderitemModel")
+        verbose_name_plural = _("OrderitemModels")
