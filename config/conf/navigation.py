@@ -52,6 +52,14 @@ PAGES = [
         "separator": True,  # Top border
         "items": [
             {
+                "title": _("Bannerlar"),
+                "icon": "person_add",
+                "link": reverse_lazy("admin:havasbook_bannermodel_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_user"
+                ),
+            },
+            {
                 "title": _("Kitoblar"),
                 "icon": "groups_2",
                 "link": reverse_lazy("admin:havasbook_bookmodel_changelist"),
@@ -59,14 +67,14 @@ PAGES = [
                     request.user, "view_group"
                 ),
             },
-            # {
-            #     "title": _("Foydalanuvchilar"),
-            #     "icon": "person_add",
-            #     "link": reverse_lazy("admin:auth_user_changelist"),
-            #     "permission": lambda request: user_has_group_or_permission(
-            #         request.user, "view_user"
-            #     ),
-            # },
+            {
+                "title": _("Kategoryalar"),
+                "icon": "person_add",
+                "link": reverse_lazy("admin:havasbook_categorymodel_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_user"
+                ),
+            },
         ],
     },
 ]
