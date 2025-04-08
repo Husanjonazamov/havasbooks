@@ -26,13 +26,35 @@ PAGES = [
         ],
     },
     {
-        "title": _("Auth"),
+        "title": _("Foydalanuvchilar"),
         "separator": True,  # Top border
         "items": [
             {
                 "title": _("Guruhlar"),
                 "icon": "groups_2",
                 "link": reverse_lazy("admin:auth_group_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_group"
+                ),
+            },
+            # {
+            #     "title": _("Foydalanuvchilar"),
+            #     "icon": "person_add",
+            #     "link": reverse_lazy("admin:auth_user_changelist"),
+            #     "permission": lambda request: user_has_group_or_permission(
+            #         request.user, "view_user"
+            #     ),
+            # },
+        ],
+    },
+    {
+        "title": _("Kitoblar bo'limi"),
+        "separator": True,  # Top border
+        "items": [
+            {
+                "title": _("Kitoblar"),
+                "icon": "groups_2",
+                "link": reverse_lazy("admin:havasbook_bookmodel_changelist"),
                 "permission": lambda request: user_has_group_or_permission(
                     request.user, "view_group"
                 ),
