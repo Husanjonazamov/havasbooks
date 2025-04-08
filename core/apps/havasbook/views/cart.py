@@ -1,7 +1,7 @@
 from django_core.mixins import BaseViewSetMixin
 from drf_spectacular.utils import extend_schema
-from rest_framework.permissions import AllowAny
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 
 from ..models import CartitemModel, CartModel
 from ..serializers.cart import (
@@ -15,10 +15,10 @@ from ..serializers.cart import (
 
 
 @extend_schema(tags=["cart"])
-class CartView(BaseViewSetMixin, ReadOnlyModelViewSet):
+class CartView(BaseViewSetMixin, ModelViewSet):
     queryset = CartModel.objects.all()
     serializer_class = ListCartSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     action_permission_classes = {}
     action_serializer_class = {

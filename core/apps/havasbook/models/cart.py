@@ -59,6 +59,13 @@ class CartitemModel(AbstractBaseModel):
         super().save(*args, **kwargs)
         self.cart.update_total_price()
          
+         
+    def update_total_price(self):
+        """Umumiy narxni yangilash."""
+        total = sum(item.total_price for item in self.items.all())  
+        self.total_price = total  
+        self.save()    
+    
 
     def __str__(self):
         return self.book.name
