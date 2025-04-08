@@ -14,7 +14,7 @@ class CartAdmin(ModelAdmin):
     )
     
     def user_name(self, obj):
-        return obj.user.first_name if obj.user else "Kitob Topilmadi"
+        return obj.user.first_name
 
 
 @admin.register(CartitemModel)
