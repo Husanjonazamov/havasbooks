@@ -18,13 +18,14 @@ class BookModel(AbstractBaseModel):
     image = models.ImageField(_("Rasm"), upload_to="book-image/", null=True, blank=True)
 
     original_price = models.DecimalField(
-        _("price"),
+        _("Asl narxi"),
         max_digits=10,
         decimal_places=2,
         null=True,
         blank=True,
     )
     price = models.DecimalField(
+        _("Chegirmadagi narxi"),
         max_digits=10,
         decimal_places=2,
         null=True,
@@ -52,7 +53,7 @@ class BookModel(AbstractBaseModel):
 
     def save(self, *args, **kwargs):
         if self.discount_percent is not None: 
-            self.final_price = self.original_price - (self.original_price * self.discount_percent / 100)
+            self.price = self.original_price - (self.original_price * self.discount_percent / 100)
         else:
             self.price = self.original_price
         super().save(*args, **kwargs)
@@ -82,7 +83,8 @@ class BookimageModel(AbstractBaseModel):
     book = models.ForeignKey(
         BookModel, 
         verbose_name=_("Kitob"), 
-        on_delete=models.CASCADE, 
+        on_delete=models.CASCADE,
+        related_name="images",
         null=True, 
         blank=True
     )
