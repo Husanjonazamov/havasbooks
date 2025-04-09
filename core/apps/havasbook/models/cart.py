@@ -5,6 +5,7 @@ from core.apps.accounts.models.user import User
 from django.db.models import Sum
 
 
+
 class CartModel(AbstractBaseModel):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE,
