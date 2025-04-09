@@ -37,6 +37,7 @@ class CartView(BaseViewSetMixin, ModelViewSet):
         "create": CreateCartSerializer,
     }
     
+    
 
 @extend_schema(tags=["cartItem"])
 class CartitemView(BaseViewSetMixin, ModelViewSet):
@@ -50,6 +51,7 @@ class CartitemView(BaseViewSetMixin, ModelViewSet):
         "retrieve": RetrieveCartitemSerializer,
         "create": CreateCartitemSerializer,
     }
+    
 
     def destroy(self, request, pk=None):
         self.permission_classes = [IsAuthenticated]
@@ -66,3 +68,22 @@ class CartitemView(BaseViewSetMixin, ModelViewSet):
 
         return Response({'status': True}, status=status.HTTP_200_OK)
 
+
+    def patch(self, request, pk=None):
+        self.permission_classes = [IsAuthenticated]
+        
+        if not request.user.is_authenticated:
+            return Response(
+                {"detail": "Authentication credentials were not provided."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+            
+        quantity = request.data.get("quantity")
+        cart_item = get_object_or_404(CartitemModel, pk=pk, cart__user=request.user) 
+        cart_item.quantity = quantity
+        cart_item.save()
+        
+        return Response(
+                {"status": True, "message": "Quantity updated successfully"},
+                status=status.HTTP_200_OK
+            )
