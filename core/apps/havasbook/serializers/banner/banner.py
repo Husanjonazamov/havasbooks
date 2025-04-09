@@ -6,11 +6,11 @@ from ...models import BannerModel
 class BaseBannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = BannerModel
-        exclude = [
-            "created_at",
-            "updated_at",
+        fields = [
+            'id',
+            'name',
+            'image'
         ]
-
 
 class ListBannerSerializer(BaseBannerSerializer):
     class Meta(BaseBannerSerializer.Meta): ...
