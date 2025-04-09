@@ -3,6 +3,9 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from django.shortcuts import get_object_or_404
+from rest_framework.exceptions import NotFound
+
+
 
 from ..models import CartitemModel, CartModel
 from ..serializers.cart import (
@@ -34,10 +37,9 @@ class CartView(BaseViewSetMixin, ModelViewSet):
         "create": CreateCartSerializer,
     }
     
-    
 
 @extend_schema(tags=["cartItem"])
-class CartitemView(ModelViewSet):
+class CartitemView(BaseViewSetMixin, ModelViewSet):
     queryset = CartitemModel.objects.all()
     serializer_class = ListCartitemSerializer
     permission_classes = [IsAuthenticated]
@@ -51,16 +53,18 @@ class CartitemView(ModelViewSet):
 
     def delete(self, request, pk=None):
         self.permission_classes = [IsAuthenticated]
+        
         if not request.user.is_authenticated:
             return Response(
                 {"detail": "Authentication credentials were not provided."},
                 status=status.HTTP_401_UNAUTHORIZED,
             )
-        cart_item = get_object_or_404(CartitemModel, pk=pk, cart__user=request.user)
-        cart_item.delete()
         
+        cart_item = get_object_or_404(CartitemModel, pk=pk, cart__user=request.user)
+        
+        cart_item.delete()
 
-        return Response(
-            {"status": True},
-            status=status.HTTP_200_OK
-        )
+        return Response({
+            'status': True
+        }, status=status.HTTP_200_OK)
+

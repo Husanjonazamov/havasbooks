@@ -8,15 +8,11 @@ from geopy.geocoders import Nominatim
 class LocationModel(AbstractBaseModel):
     name = models.CharField(_("name"), max_length=255, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="locations") 
-    latitude = models.DecimalField(
+    latitude = models.FloatField(
         _("Kenglik"),
-        max_digits=9,
-        decimal_places=6
     )
-    longitude = models.DecimalField(
+    longitude = models.FloatField(
         _("Uzunlik"),
-        max_digits=9,
-        decimal_places=6
     )
 
     def __str__(self):

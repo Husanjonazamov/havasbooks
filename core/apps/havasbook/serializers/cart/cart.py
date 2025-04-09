@@ -66,26 +66,20 @@ class CreateCartSerializer(BaseCartSerializer):
         # 'cart_items'ni olish
         cart_items_data = validated_data.pop('cart_items', [])
 
-        # Cart yaratish yoki mavjud bo'lsa olish
         cart = validated_data.get('cart', None)
         if not cart:
             cart, created = CartModel.objects.get_or_create(user=user)
 
         # Har bir cart_item uchun yaratish va narxni hisoblash
         for item_data in cart_items_data:
-            item_data['cart'] = cart  # cartni bog'lash
-            # Quantity va total_price ni hisoblash
+            item_data['cart'] = cart  
             book = item_data.get('book')
             quantity = item_data.get('quantity', 1)  # agar quantity yo'q bo'lsa, 1 deb olish
 
-            total_price = book.price * quantity  # Jami narxni hisoblash
-            item_data['total_price'] = total_price  # total_price ni o'rnatish
+            total_price = book.price * quantity  
+            item_data['total_price'] = total_price 
 
-            # CartitemModel yaratish
             CartitemModel.objects.create(**item_data)
-
-        # Cart total_price ni yangilash
-        cart.update_total_price()
 
         return cart
 

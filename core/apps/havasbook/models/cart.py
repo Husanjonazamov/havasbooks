@@ -20,12 +20,7 @@ class CartModel(AbstractBaseModel):
     def __str__(self):
         return self.user.first_name
     
-    def update_total_price(self):
-        # 'self.cart_items' deb o'zgartiring
-        total = self.cart_items.aggregate(Sum('total_price'))['total_price__sum'] or 0
-        self.total_price = total
-        self.save() 
-
+        
     @classmethod
     def _create_fake(self):
         return self.objects.create(
@@ -54,15 +49,6 @@ class CartitemModel(AbstractBaseModel):
         decimal_places=2,
         default=0.00
     )
-    
-    def save(self, *args, **kwargs):
-        self.total_price = self.book.price * self.quantity
-
-        if self.cart:
-            self.cart.update_total_price()
-
-        super().save(*args, **kwargs)
-    
     
 
     def __str__(self):
