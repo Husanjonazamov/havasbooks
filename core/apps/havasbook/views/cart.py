@@ -51,7 +51,7 @@ class CartitemView(BaseViewSetMixin, ModelViewSet):
         "create": CreateCartitemSerializer,
     }
 
-    def delete(self, request, pk=None):
+    def destroy(self, request, pk=None):
         self.permission_classes = [IsAuthenticated]
         
         if not request.user.is_authenticated:
@@ -64,7 +64,5 @@ class CartitemView(BaseViewSetMixin, ModelViewSet):
         
         cart_item.delete()
 
-        return Response({
-            'status': True
-        }, status=status.HTTP_200_OK)
+        return Response({'status': True}, status=status.HTTP_200_OK)
 
