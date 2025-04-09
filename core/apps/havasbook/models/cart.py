@@ -55,16 +55,6 @@ class CartitemModel(AbstractBaseModel):
         default=0.00
     )
     
-    def delete(self, *args, **kwargs):
-        if self.cart:
-            print("Cartitem o'chirilyapti!")
-            self.cart.update_total_price()
-            
-        super().delete(*args, **kwargs)
-
-
-        super().delete(*args, **kwargs)
-    
     def save(self, *args, **kwargs):
         self.total_price = self.book.price * self.quantity
 
@@ -72,7 +62,6 @@ class CartitemModel(AbstractBaseModel):
             self.cart.update_total_price()
 
         super().save(*args, **kwargs)
-    
     
     
 
