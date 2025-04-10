@@ -1,15 +1,14 @@
 from datetime import datetime
 
-from core.services import sms
 from django.contrib.auth import get_user_model, hashers
 from django.utils.translation import gettext as _
-from django_core import exceptions
 from rest_framework.exceptions import PermissionDenied
 from rest_framework_simplejwt import tokens
 
 
-class UserService(sms.SmsService):
+class UserService:
     def get_token(self, user):
+        # Tokenni user_id asosida yuborish
         refresh = tokens.RefreshToken.for_user(user)
 
         return {
@@ -17,26 +16,17 @@ class UserService(sms.SmsService):
             "access": str(refresh.access_token),
         }
 
-    def create_user(self, phone, user_id, first_name, last_name, password):
+    def create_user(self, user_id, first_name, last_name, password):
+        # Telefonni olishni olib tashlash va user_id bilan yaratish
         get_user_model().objects.update_or_create(
-            phone=phone,
+            user_id=user_id,
             defaults={
-                "phone": phone,
                 "user_id": user_id,
                 "first_name": first_name,
                 "last_name": last_name,
                 "password": hashers.make_password(password),
             },
         )
-
-    def send_confirmation(self, phone) -> bool:
-        try:
-            self.send_confirm(phone)
-            return True
-        except exceptions.SmsException as e:
-            raise PermissionDenied(_("Qayta sms yuborish uchun kuting: {}").format(e.kwargs.get("expired")))
-        except Exception:
-            raise PermissionDenied(_("Serverda xatolik yuz berdi"))
 
     def validate_user(self, user) -> dict:
         """
@@ -56,10 +46,11 @@ class UserService(sms.SmsService):
             return True
         return False
 
-    def change_password(self, phone, password):
+    def change_password(self, user_id, password):
         """
         Change password
         """
-        user = get_user_model().objects.filter(phone=phone).first()
-        user.set_password(password)
-        user.save()
+        user = get_user_model().objects.filter(user_id=user_id).first()
+        if user:
+            user.set_password(password)
+            user.save()

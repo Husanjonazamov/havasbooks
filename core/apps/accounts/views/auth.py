@@ -52,44 +52,22 @@ class RegisterView(BaseViewSetMixin, GenericViewSet, UserService):
         ser = self.get_serializer(data=request.data)
         ser.is_valid(raise_exception=True)
         data = ser.data
-        phone = data.get("phone")
-        # Create pending user
-        self.create_user(phone, data.get("user_id"),  data.get("first_name"), data.get("last_name"), data.get("password"))
-        self.send_confirmation(phone)  # Send confirmation code for sms eskiz.uz
+        # Get user data
+        user_id = data.get("user_id")
+        first_name = data.get("first_name")
+        last_name = data.get("last_name")
+        password = data.get("password")
+        self.create_user(user_id, first_name, last_name, password)
+        user = get_user_model().objects.filter(user_id=user_id).first()
+        token = self.get_token(user) 
         return Response(
-            {"detail": _("Sms %(phone)s raqamiga yuborildi") % {"phone": phone}},
+            {
+                "detail": _("Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tdi"),
+                "token": token,
+            },
             status=status.HTTP_202_ACCEPTED,
         )
 
-    @extend_schema(summary="Auth confirm.", description="Auth confirm user.")
-    @action(methods=["POST"], detail=False, url_path="confirm")
-    def confirm(self, request):
-        ser = self.get_serializer(data=request.data)
-        ser.is_valid(raise_exception=True)
-        data = ser.data
-        phone, code = data.get("phone"), data.get("code")
-        try:
-            if SmsService.check_confirm(phone, code=code):
-                token = self.validate_user(get_user_model().objects.filter(phone=phone).first())
-                return Response(
-                    data={
-                        "detail": _("Tasdiqlash ko'di qabul qilindi"),
-                        "token": token,
-                    },
-                    status=status.HTTP_202_ACCEPTED,
-                )
-        except exceptions.SmsException as e:
-            raise PermissionDenied(e)  # Response exception for APIException
-        except Exception as e:
-            raise PermissionDenied(e)  # Api exception for APIException
-
-    @action(methods=["POST"], detail=False, url_path="resend")
-    def resend(self, rq: Type[request.Request]):
-        ser = self.get_serializer(data=rq.data)
-        ser.is_valid(raise_exception=True)
-        phone = ser.data.get("phone")
-        self.send_confirmation(phone)
-        return Response({"detail": _("Sms %(phone)s raqamiga yuborildi") % {"phone": phone}})
 
 
 @extend_schema(tags=["reset-password"])

@@ -14,7 +14,7 @@ class CustomUserAdmin(admin.UserAdmin, ModelAdmin):
         "last_name",
         "phone",
         "role",
-        "user_id",
+        "user_id"
     )
     autocomplete_fields = ["groups", "user_permissions"]
     fieldsets = ((None, {"fields": ("phone", "user_id")}),) + (
