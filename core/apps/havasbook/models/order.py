@@ -68,7 +68,7 @@ class OrderitemModel(AbstractBaseModel):
     order = models.ForeignKey(
         OrderModel, 
         on_delete=models.CASCADE,
-        related_name="orderitem",
+        related_name="order_item",
     )
     book = models.ForeignKey(
         "havasbook.BookModel",

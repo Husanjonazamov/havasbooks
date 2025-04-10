@@ -49,9 +49,8 @@ class RetrieveCartSerializer(BaseCartSerializer):
 class CreateCartSerializer(BaseCartSerializer):
     cart_items = serializers.ListField(
         child=CreateCartitemSerializer(),
-        required=True
+        required=False
     )
-
     class Meta(BaseCartSerializer.Meta):
         model = CartModel
         fields = BaseCartSerializer.Meta.fields + ['cart_items']

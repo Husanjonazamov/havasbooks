@@ -6,7 +6,9 @@ from core.apps.havasbook.views import (
     BookView,
     CartitemView,
     CartView,
-    LocationView
+    LocationView,
+    OrderView, 
+    OrderitemView
 )
 
 router = DefaultRouter()
@@ -16,6 +18,10 @@ router.register(r"books", BookView, basename='books')
 router.register(r"cart", CartView, basename='cart')
 router.register(r"cart-item", CartitemView, basename='cart-item')
 router.register(r"location", LocationView, basename='location')
+router.register(r"order", OrderView, basename='order')
+router.register(r"order-item", OrderitemView, basename='order-item')
+
+
 
 
 
