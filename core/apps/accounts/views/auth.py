@@ -31,6 +31,9 @@ from ..serializers import ChangePasswordSerializer
 from .. import models
 
 
+
+
+
 @extend_schema(tags=["register"])
 class RegisterView(BaseViewSetMixin, GenericViewSet, UserService):
     throttle_classes = [throttling.UserRateThrottle]
@@ -49,15 +52,26 @@ class RegisterView(BaseViewSetMixin, GenericViewSet, UserService):
 
     @action(methods=["POST"], detail=False, url_path="register")
     def register(self, request):
+        # Serializerni yaratish va tekshirish
         ser = self.get_serializer(data=request.data)
         ser.is_valid(raise_exception=True)
         data = ser.data
-        phone = data.get("phone")
-        # Create pending user
-        self.create_user(phone, data.get("first_name"), data.get("last_name"), data.get("password"))
-        self.send_confirmation(phone)  # Send confirmation code for sms eskiz.uz
+
+        # `user_id`ni olish
+        user_id = data.get("user_id")
+
+        # `create_user` metodini chaqirish
+        user_service = UserService()  # user_service ni yaratish
+        user, created = user_service.create_user(
+            user_id=user_id, 
+            first_name=data.get("first_name"),
+            last_name=data.get("last_name"),
+            password=data.get("password")
+        )
+
+        # Javobni qaytarish
         return Response(
-            {"detail": _("Sms %(phone)s raqamiga yuborildi") % {"phone": phone}},
+            {"detail": _("Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tdi")},
             status=status.HTTP_202_ACCEPTED,
         )
 
@@ -69,6 +83,7 @@ class RegisterView(BaseViewSetMixin, GenericViewSet, UserService):
         data = ser.data
         phone, code = data.get("phone"), data.get("code")
         try:
+            # Tasdiqlash kodini tekshirish
             if SmsService.check_confirm(phone, code=code):
                 token = self.validate_user(get_user_model().objects.filter(phone=phone).first())
                 return Response(
@@ -78,8 +93,6 @@ class RegisterView(BaseViewSetMixin, GenericViewSet, UserService):
                     },
                     status=status.HTTP_202_ACCEPTED,
                 )
-        except exceptions.SmsException as e:
-            raise PermissionDenied(e)  # Response exception for APIException
         except Exception as e:
             raise PermissionDenied(e)  # Api exception for APIException
 
@@ -88,9 +101,14 @@ class RegisterView(BaseViewSetMixin, GenericViewSet, UserService):
         ser = self.get_serializer(data=rq.data)
         ser.is_valid(raise_exception=True)
         phone = ser.data.get("phone")
-        self.send_confirmation(phone)
-        return Response({"detail": _("Sms %(phone)s raqamiga yuborildi") % {"phone": phone}})
+        return Response({"detail": _("Sms %(phone)s raqamiga yuborilishi o'chirildi.") % {"phone": phone}})
 
+    
+    
+    
+    
+    
+    
 
 @extend_schema(tags=["reset-password"])
 class ResetPasswordView(BaseViewSetMixin, GenericViewSet, UserService):

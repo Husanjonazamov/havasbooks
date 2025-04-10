@@ -6,28 +6,42 @@ from rest_framework import exceptions, serializers
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=255)
-
+    
+    
+    
 
 class RegisterSerializer(serializers.ModelSerializer):
-    phone = serializers.CharField(max_length=255)
+    password = serializers.CharField(write_only=True, min_length=8)
+    user_id = serializers.IntegerField(read_only=True)  
 
-    def validate_phone(self, value):
-        user = get_user_model().objects.filter(phone=value, validated_at__isnull=False)
-        if user.exists():
-            raise exceptions.ValidationError(_("Phone number already registered."), code="unique")
+    def validate_password(self, value):
+        if len(value) < 8:
+            raise exceptions.ValidationError(_("Password must be at least 8 characters long"))
         return value
+
+    def create(self, validated_data):
+        user = get_user_model().objects.create_user(
+            first_name=validated_data["first_name"],
+            last_name=validated_data["last_name"],
+            user_id=validated_data["user_id"],
+            password=validated_data["password"]
+        )
+        return user
 
     class Meta:
         model = get_user_model()
-        fields = ["first_name", "last_name", "phone", "password"]
+        fields = ["user_id", "first_name", "last_name", "password"]
         extra_kwargs = {
-            "first_name": {
-                "required": True,
-            },
+            "first_name": {"required": True},
             "last_name": {"required": True},
+            "user_id": {"required": True}
         }
+        
+        
+        
+        
 
-
+    
 class ConfirmSerializer(serializers.Serializer):
     code = serializers.IntegerField(min_value=1000, max_value=9999)
     phone = serializers.CharField(max_length=255)

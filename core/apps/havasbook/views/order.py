@@ -1,7 +1,7 @@
 from django_core.mixins import BaseViewSetMixin
 from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import AllowAny
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 
 from ..models import OrderitemModel, OrderModel
 from ..serializers.order import (
@@ -15,7 +15,7 @@ from ..serializers.order import (
 
 
 @extend_schema(tags=["order"])
-class OrderView(BaseViewSetMixin, ReadOnlyModelViewSet):
+class OrderView(BaseViewSetMixin, ModelViewSet):
     queryset = OrderModel.objects.all()
     serializer_class = ListOrderSerializer
     permission_classes = [AllowAny]
@@ -29,7 +29,7 @@ class OrderView(BaseViewSetMixin, ReadOnlyModelViewSet):
 
 
 @extend_schema(tags=["orderITem"])
-class OrderitemView(BaseViewSetMixin, ReadOnlyModelViewSet):
+class OrderitemView(BaseViewSetMixin, ModelViewSet):
     queryset = OrderitemModel.objects.all()
     serializer_class = ListOrderitemSerializer
     permission_classes = [AllowAny]
