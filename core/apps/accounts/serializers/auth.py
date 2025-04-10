@@ -10,6 +10,7 @@ class LoginSerializer(serializers.Serializer):
 
 class RegisterSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(max_length=255)
+    user_id = serializers.IntegerField()
 
     def validate_phone(self, value):
         user = get_user_model().objects.filter(phone=value, validated_at__isnull=False)
@@ -19,7 +20,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ["first_name", "last_name", "phone", "password"]
+        fields = ["user_id", "first_name", "last_name", "phone", "password"]
         extra_kwargs = {
             "first_name": {
                 "required": True,

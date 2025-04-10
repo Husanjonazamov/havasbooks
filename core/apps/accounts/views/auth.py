@@ -54,7 +54,7 @@ class RegisterView(BaseViewSetMixin, GenericViewSet, UserService):
         data = ser.data
         phone = data.get("phone")
         # Create pending user
-        self.create_user(phone, data.get("first_name"), data.get("last_name"), data.get("password"))
+        self.create_user(phone, data.get("user_id"),  data.get("first_name"), data.get("last_name"), data.get("password"))
         self.send_confirmation(phone)  # Send confirmation code for sms eskiz.uz
         return Response(
             {"detail": _("Sms %(phone)s raqamiga yuborildi") % {"phone": phone}},
