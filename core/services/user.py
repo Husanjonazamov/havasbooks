@@ -26,6 +26,7 @@ class UserService:
                 "password": hashers.make_password(password),
             },
         )
+        
 
     def validate_user(self, user) -> dict:
         """

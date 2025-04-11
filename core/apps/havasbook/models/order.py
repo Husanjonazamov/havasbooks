@@ -73,7 +73,7 @@ class OrderitemModel(AbstractBaseModel):
     book = models.ForeignKey(
         "havasbook.BookModel",
         on_delete=models.CASCADE,
-        related_name="orderitem"
+        related_name="order_item"
     )
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)  
