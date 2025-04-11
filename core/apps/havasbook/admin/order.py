@@ -9,14 +9,11 @@ class OrderAdmin(ModelAdmin):
     list_display = (
         "id",
         "__str__",
-        'user_name',
         'payment_method',
         'total_amount',
         'status'
     )
-    
-    def user_name(self, obj):
-        return obj.user.first_name
+
 
 
 
