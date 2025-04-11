@@ -8,7 +8,6 @@ from rest_framework_simplejwt import tokens
 
 class UserService:
     def get_token(self, user):
-        # Tokenni user_id asosida yuborish
         refresh = tokens.RefreshToken.for_user(user)
 
         return {
