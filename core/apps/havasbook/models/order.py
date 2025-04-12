@@ -24,6 +24,7 @@ class OrderModel(AbstractBaseModel):
         on_delete=models.CASCADE,
         related_name="orders"
     )
+    phone = models.CharField(_("Telefon raqam"), max_length=15, null=True, blank=True)
     location = models.ForeignKey(
         "havasbook.LocationModel",
         on_delete=models.CASCADE,

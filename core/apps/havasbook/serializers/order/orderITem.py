@@ -35,7 +35,6 @@ class RetrieveOrderitemSerializer(BaseOrderitemSerializer):
 
 
 class CreateOrderitemSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = OrderitemModel
         fields = [

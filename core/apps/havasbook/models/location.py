@@ -18,8 +18,6 @@ class LocationModel(AbstractBaseModel):
     def __str__(self):
         return self.name
     
-    
-    
     def get_address(self):
         geolocator = Nominatim(user_agent="myapp")
         location = geolocator.reverse((self.latitude, self.longitude), language='en')

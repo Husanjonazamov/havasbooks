@@ -8,5 +8,7 @@ from ..models import LocationModel
 class LocationAdmin(ModelAdmin):
     list_display = (
         "id",
-        "__str__",
+        'name',
+        'longitude',
+        'latitude'
     )
