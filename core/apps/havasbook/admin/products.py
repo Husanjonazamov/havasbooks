@@ -3,6 +3,8 @@ from unfold.admin import ModelAdmin, TabularInline
 
 from ..models import ProductsimageModel, ProductsModel
 
+from modeltranslation.admin import TabbedTranslationAdmin
+
 
 
 class ProductImageInline(TabularInline):
@@ -12,7 +14,7 @@ class ProductImageInline(TabularInline):
 
 
 @admin.register(ProductsModel)
-class ProductsAdmin(ModelAdmin):
+class ProductsAdmin(ModelAdmin, TabbedTranslationAdmin):
     readonly_fields = ("price",)
     list_display = (
         "id",
