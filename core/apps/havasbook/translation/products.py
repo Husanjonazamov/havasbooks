@@ -5,7 +5,10 @@ from ..models import ProductsimageModel, ProductsModel
 
 @register(ProductsModel)
 class ProductsTranslation(TranslationOptions):
-    fields = []
+    fields = [
+        'name',
+        'description'
+    ]
 
 
 @register(ProductsimageModel)
