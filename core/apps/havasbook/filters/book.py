@@ -4,6 +4,7 @@ from django.db.models import Q
 
 
 
+
 class BookFilter(django_filters.FilterSet):
     min_price = django_filters.NumberFilter(field_name='price', lookup_expr='gte', label='Min Price')
     max_price = django_filters.NumberFilter(field_name='price', lookup_expr='lte', label='Max Price')
@@ -25,6 +26,18 @@ class BookFilter(django_filters.FilterSet):
             queryset = queryset.order_by('-sold_count')  
         return queryset
 
+    is_preorder = django_filters.BooleanFilter(field_name='is_preorder', label='Pre-order Books')
+
+    ordering = django_filters.OrderingFilter(
+        fields=(
+            ('sold_count', 'sold_count'),
+            ('view_count', 'view_count'),
+            ('price', 'price'),
+            ('name', 'name'),
+        ),
+        label="Order By"
+    )
+
     class Meta:
         model = BookModel
-        fields = ['min_price', 'max_price', 'min_sold_count', 'max_sold_count', 'category', 'is_discount']
+        fields = ['min_price', 'max_price', 'min_sold_count', 'max_sold_count', 'category', 'is_discount', 'is_preorder']
