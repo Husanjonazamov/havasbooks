@@ -20,6 +20,10 @@ class BookFilter(django_filters.FilterSet):
         )
 
     popular = django_filters.BooleanFilter(method='filter_by_popular', label='Most Popular')
+    
+    sold_count = django_filters.NumberFilter(field_name='sold_count', lookup_expr='exact', label='Sold Count')
+
+    view_count = django_filters.NumberFilter(field_name='view_count', lookup_expr='exact', label='View Count')
 
     def filter_by_popular(self, queryset, name, value):
         if value:
