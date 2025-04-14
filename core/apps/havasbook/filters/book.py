@@ -19,6 +19,12 @@ class BookFilter(django_filters.FilterSet):
             Q(name__icontains=value) | Q(description__icontains=value)
         )
 
+
+    created_at = django_filters.OrderingFilter(
+        field_name='created_at',
+        label='Order by Creation Date'
+    )
+
     popular = django_filters.BooleanFilter(method='filter_by_popular', label='Most Popular')
     
     sold_count = django_filters.NumberFilter(field_name='sold_count', lookup_expr='exact', label='Sold Count')
@@ -36,6 +42,7 @@ class BookFilter(django_filters.FilterSet):
         fields=(
             ('sold_count', 'sold_count'),
             ('view_count', 'view_count'),
+            ('created_at', 'created_at'),
             ('price', 'price'),
             ('name', 'name'),
         ),
@@ -44,4 +51,12 @@ class BookFilter(django_filters.FilterSet):
 
     class Meta:
         model = BookModel
-        fields = ['min_price', 'max_price', 'min_sold_count', 'max_sold_count', 'category', 'is_discount', 'is_preorder']
+        fields = [
+            'min_price',
+            'max_price',
+            'min_sold_count',
+            'max_sold_count', 
+            'category',
+            'is_discount',
+            'is_preorder',
+        ]

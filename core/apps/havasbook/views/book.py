@@ -45,12 +45,10 @@ class BookView(BaseViewSetMixin, ReadOnlyModelViewSet):
     permission_classes = [AllowAny]
     pagination_class = CustomPagination
 
-    # filter classes
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_class = BookFilter
-    ordering_fields = ['price', 'sold_count', 'view_count']
-    ordering = ['-sold_count']
-
+    ordering_fields = ['price', 'sold_count', 'view_count', 'created_at'] 
+    ordering = ['-sold_count'] 
 
     action_permission_classes = {}
     action_serializer_class = {
