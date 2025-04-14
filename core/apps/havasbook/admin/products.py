@@ -36,7 +36,7 @@ class ProductsAdmin(ModelAdmin):
         
         
     inlines = [
-        BookimageInline,
+        ProductImageInline,
     ]
 
 @admin.register(ProductsimageModel)
