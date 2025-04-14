@@ -58,9 +58,6 @@ class BookModel(AbstractBaseModel):
 
 
 
-    def __str__(self):
-        return self.name
-
 
     def save(self, *args, **kwargs):
         if self.discount_percent is not None: 
