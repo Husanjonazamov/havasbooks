@@ -14,6 +14,7 @@ class BookModel(AbstractBaseModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        related_name='books' 
     )
     image = models.ImageField(_("Rasm"), upload_to="book-image/", null=True, blank=True)
 

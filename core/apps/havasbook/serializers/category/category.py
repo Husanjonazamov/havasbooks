@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from ...models import CategoryModel
-
+from core.apps.havasbook.serializers.book.book import BaseBookSerializer
 
 class BaseCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,7 +9,7 @@ class BaseCategorySerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
-            'image'
+            'image',
         ]
 
 
@@ -18,7 +18,9 @@ class ListCategorySerializer(BaseCategorySerializer):
 
 
 class RetrieveCategorySerializer(BaseCategorySerializer):
-    class Meta(BaseCategorySerializer.Meta): ...
+    books = BaseBookSerializer(many=True, read_only=True)
+    class Meta(BaseCategorySerializer.Meta): 
+        fields = BaseCategorySerializer.Meta.fields + ['books']
 
 
 class CreateCategorySerializer(BaseCategorySerializer):

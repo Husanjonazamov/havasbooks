@@ -4,7 +4,7 @@ from decimal import Decimal
 
 
 class BaseBookSerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField()
+    # category = serializers.SerializerMethodField()
     class Meta:
         model = BookModel
         fields = [
@@ -18,10 +18,10 @@ class BaseBookSerializer(serializers.ModelSerializer):
             'is_discount',
         ]
         
-    def get_category(self, obj):
-        from core.apps.havasbook.serializers.category import ListCategorySerializer
+    # def get_category(self, obj):
+    #     from core.apps.havasbook.serializers.category import ListCategorySerializer
         
-        return ListCategorySerializer(obj.category).data
+    #     return ListCategorySerializer(obj.category).data
     
     
     def to_representation(self, instance):
