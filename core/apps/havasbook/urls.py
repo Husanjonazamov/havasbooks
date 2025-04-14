@@ -8,7 +8,8 @@ from core.apps.havasbook.views import (
     CartView,
     LocationView,
     OrderView, 
-    OrderitemView
+    OrderitemView,
+    BooksSearchView
 )
 
 router = DefaultRouter()
@@ -21,10 +22,8 @@ router.register(r"location", LocationView, basename='location')
 router.register(r"order", OrderView, basename='order')
 router.register(r"order-item", OrderitemView, basename='order-item')
 
-
-
-
-
+# search
+router.register(r"search", BooksSearchView, basename="search")
 
 
 urlpatterns = [
