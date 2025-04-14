@@ -15,6 +15,11 @@ from ..serializers.book import (
 )
 
 from django.db.models import Q
+from rest_framework.filters import OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from core.apps.havasbook.filters.book import BookFilter
+
+
 
 class BooksSearchView(ModelViewSet):
     serializer_class = ListBookSerializer
@@ -39,6 +44,14 @@ class BookView(BaseViewSetMixin, ReadOnlyModelViewSet):
     serializer_class = ListBookSerializer
     permission_classes = [AllowAny]
     pagination_class = CustomPagination
+
+    # filter classes
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filterset_class = BookFilter
+    ordering_fields = ['price', 'sold_count', 'view_count']
+    ordering = ['sold_count']
+
+    
 
     action_permission_classes = {}
     action_serializer_class = {

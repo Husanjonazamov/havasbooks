@@ -16,7 +16,10 @@ class BaseBookSerializer(serializers.ModelSerializer):
             'discount_percent',
             'price',
             'quantity',
+            'sold_count',
+            'view_count',
             'is_discount',
+            'is_preorder',
         ]
         
     # def get_category(self, obj):
