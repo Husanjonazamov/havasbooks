@@ -15,6 +15,7 @@ class BaseBookSerializer(serializers.ModelSerializer):
             'original_price',
             'discount_percent',
             'price',
+            'quantity',
             'is_discount',
         ]
         
