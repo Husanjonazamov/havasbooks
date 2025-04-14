@@ -19,6 +19,7 @@ from django.db.models import Q
 class BooksSearchView(ModelViewSet):
     serializer_class = ListBookSerializer
     permission_classes = [AllowAny]
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         queryset = BookModel.objects.all()
