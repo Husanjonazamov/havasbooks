@@ -120,6 +120,14 @@ PAGES = [
                     request.user, "view_group"
                 ),
             },
+            {
+                "title": _("Oldindan Buyurtmalar"),
+                "icon": "list_alt",  # Mos icon (list of items)
+                "link": reverse_lazy("admin:havasbook_preordermodel_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_group"
+                ),
+            },
         ]
     },
 ]

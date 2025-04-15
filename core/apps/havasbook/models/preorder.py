@@ -5,10 +5,11 @@ from django_core.models import AbstractBaseModel
 
 class PreorderModel(AbstractBaseModel):
     book = models.ForeignKey(
-        _("Kitob"),
+        'havasbook.BookModel',
         on_delete=models.CASCADE,
         related_name="books"
     )
+
     user_name = models.CharField(
         _("Foydalanuvchi ismi"),
         max_length=250, 
