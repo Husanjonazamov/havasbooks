@@ -25,15 +25,22 @@ class BookFilter(django_filters.FilterSet):
         label='Order by Creation Date'
     )
 
-    popular = django_filters.BooleanFilter(method='filter_by_popular', label='Most Popular')
+    popular = django_filters.ChoiceFilter(
+        choices=[('sold', 'Most Sold'), ('view', 'Most Viewed')],
+        method='filter_by_popular',
+        label='Sort by Popularity'
+    )
+    
     
     sold_count = django_filters.NumberFilter(field_name='sold_count', lookup_expr='exact', label='Sold Count')
 
     view_count = django_filters.NumberFilter(field_name='view_count', lookup_expr='exact', label='View Count')
 
     def filter_by_popular(self, queryset, name, value):
-        if value:
+        if value == 'sold':
             queryset = queryset.order_by('-sold_count')  
+        elif value == 'view':
+            queryset = queryset.order_by('-view_count')  
         return queryset
 
     is_preorder = django_filters.BooleanFilter(field_name='is_preorder', label='Pre-order Books')
