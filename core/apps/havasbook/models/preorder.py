@@ -4,10 +4,28 @@ from django_core.models import AbstractBaseModel
 
 
 class PreorderModel(AbstractBaseModel):
-    name = models.CharField(_("name"), max_length=255)
+    book = models.ForeignKey(
+        _("Kitob"),
+        on_delete=models.CASCADE,
+        related_name="books"
+    )
+    user_name = models.CharField(
+        _("Foydalanuvchi ismi"),
+        max_length=250, 
+        null=True,
+        blank=True
+    )
+    phone = models.CharField(
+        _("Telefon raqam"),
+        max_length=100,
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
-        return self.name
+        return self.book.name
+
+
 
     @classmethod
     def _create_fake(self):
