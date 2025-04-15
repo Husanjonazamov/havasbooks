@@ -20,9 +20,17 @@ class BookModel(AbstractBaseModel):
         blank=True,
         related_name='books'
     )
-
+    color = models.ManyToManyField(
+        'havasbook.ColorModel',
+        verbose_name=_("Mahsulot Rangi"),
+        blank=True
+    )
+    size = models.ManyToManyField(
+        'havasbook.SizeModel',
+        verbose_name=_("O'lchami"),
+        blank=True
+    )
     image = models.ImageField(_("Rasm"), upload_to="book-image/", null=True, blank=True)
-
     original_price = models.DecimalField(
         _("Asl narxi"), max_digits=10, decimal_places=2, null=True, blank=True
     )

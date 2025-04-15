@@ -25,6 +25,7 @@ class BookAdmin(ModelAdmin, TabbedTranslationAdmin):
     )
     
     list_filter = ('is_discount',)
+    filter_horizontal = ('color', 'size')
     search_fields = ('original_price',)
     
 
