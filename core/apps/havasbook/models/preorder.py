@@ -7,7 +7,7 @@ class PreorderModel(AbstractBaseModel):
     book = models.ForeignKey(
         'havasbook.BookModel',
         on_delete=models.CASCADE,
-        related_name="books"
+        related_name="book"
     )
 
     user_name = models.CharField(

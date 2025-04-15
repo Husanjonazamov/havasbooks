@@ -62,7 +62,7 @@ PAGES = [
             {
                 "title": _("Kitoblar"),
                 "icon": "book",  # Kitoblar uchun mos icon
-                "link": reverse_lazy("admin:havasbook_productsmodel_changelist"),
+                "link": reverse_lazy("admin:havasbook_bookmodel_changelist"),
                 "permission": lambda request: user_has_group_or_permission(
                     request.user, "view_group"
                 ),
