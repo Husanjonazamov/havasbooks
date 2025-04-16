@@ -4,7 +4,12 @@ from django_core.models import AbstractBaseModel
 
 
 class ColorModel(AbstractBaseModel):
+    name = models.CharField(_("Rang Nomi"), max_length=50)
     image = models.ImageField(_("Rangi"), upload_to="book-color/")
+
+
+    def __str__(self):
+        return self.name
 
     @classmethod
     def _create_fake(self):
