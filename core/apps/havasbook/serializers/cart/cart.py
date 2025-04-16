@@ -76,17 +76,16 @@ class CreateCartSerializer(BaseCartSerializer):
             if not book:
                 raise serializers.ValidationError("Item uchun book kiritilishi kerak.")
 
-            total_price = Decimal(book.price) * Decimal(quantity)  # Ensure it's Decimal
+            total_price = Decimal(book.price) * Decimal(quantity)  
             total_price_sum += total_price
 
             CartitemModel.objects.create(
                 cart=cart,
                 book=book,
                 quantity=quantity,
-                total_price=total_price
+                total_price=total_price,
             )
 
-        # Ensure cart.total_price is also Decimal
         cart.total_price = Decimal(cart.total_price) + total_price_sum
         cart.save()
 

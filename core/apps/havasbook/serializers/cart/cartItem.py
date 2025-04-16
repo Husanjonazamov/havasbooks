@@ -2,12 +2,13 @@ from rest_framework import serializers
 
 from ...models import CartitemModel, CartModel
 from core.apps.havasbook.models.book import BookModel
-
+from core.apps.havasbook.models.variants import ColorModel, SizeModel
 
 
 class BaseCartitemSerializer(serializers.ModelSerializer):
-    book = serializers.PrimaryKeyRelatedField(queryset=BookModel.objects.all())  # Bookni olish (ID orqali)
-    cart = serializers.SerializerMethodField()  # Cartni olish
+    book = serializers.SerializerMethodField() 
+    cart = serializers.SerializerMethodField()
+    
     
     class Meta:
         model = CartitemModel
@@ -28,6 +29,19 @@ class BaseCartitemSerializer(serializers.ModelSerializer):
         return ListBookSerializer(obj.book).data  # Bookni get qilish
 
 
+    # def get_color(self, obj):
+    #     if obj.color:
+    #         from core.apps.havasbook.serializers.variants import ListColorSerializer
+    #         return ListColorSerializer(obj.color).data
+    #     return None
+
+    # def get_size(self, obj):
+    #     if obj.size:
+    #         from core.apps.havasbook.serializers.variants import ListSizeSerializer
+    #         return ListSizeSerializer(obj.size).data
+    #     return None
+
+
 
 class ListCartitemSerializer(BaseCartitemSerializer):
     class Meta(BaseCartitemSerializer.Meta): ...
@@ -37,9 +51,11 @@ class RetrieveCartitemSerializer(BaseCartitemSerializer):
     class Meta(BaseCartitemSerializer.Meta): ...
 
 
+
+
 class CreateCartitemSerializer(serializers.ModelSerializer):
-    
     book = serializers.PrimaryKeyRelatedField(queryset=BookModel.objects.all())
+
     quantity = serializers.IntegerField(min_value=1)
     
     class Meta:
@@ -50,3 +66,13 @@ class CreateCartitemSerializer(serializers.ModelSerializer):
             'quantity',
             'total_price'
         ]
+
+    def validate(self, attrs):
+        book = attrs.get('book')
+        quantity = attrs.get('quantity')
+
+        total_price = book.price * quantity
+
+        attrs['total_price'] = total_price
+        return attrs
+

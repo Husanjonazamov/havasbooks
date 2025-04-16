@@ -44,6 +44,7 @@ class CartitemModel(AbstractBaseModel):
         on_delete=models.CASCADE
     )
     quantity = models.PositiveBigIntegerField(_("Mahsulot soni"), default=1)
+   
     total_price = models.DecimalField(
         max_digits=20,
         decimal_places=2,
