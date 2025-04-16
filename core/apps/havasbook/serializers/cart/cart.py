@@ -43,43 +43,52 @@ class RetrieveCartSerializer(BaseCartSerializer):
     class Meta(BaseCartSerializer.Meta): ...
 
 
-
-
-
 class CreateCartSerializer(BaseCartSerializer):
     cart_items = serializers.ListField(
         child=CreateCartitemSerializer(),
-        required=False
+        required=True
     )
+
     class Meta(BaseCartSerializer.Meta):
         model = CartModel
         fields = BaseCartSerializer.Meta.fields + ['cart_items']
 
+    def validate_cart_items(self, value):
+        if not value:
+            raise serializers.ValidationError("Cart items bo'sh bo'lishi mumkin emas.")
+        return value
+
     def create(self, validated_data):
-        # Foydalanuvchi ma'lumotlarini olish
         user = self.context['request'].user
-        
-        if not user:
-            raise ValueError("Request object not found in serializer context.")
-        
-        # 'cart_items'ni olish
-        cart_items_data = validated_data.pop('cart_items', [])
 
-        cart = validated_data.get('cart', None)
-        if not cart:
-            cart, created = CartModel.objects.get_or_create(user=user)
+        if not user or user.is_anonymous:
+            raise serializers.ValidationError("Foydalanuvchi aniqlanmadi.")
 
-        # Har bir cart_item uchun yaratish va narxni hisoblash
+        cart_items_data = validated_data.pop('cart_items')
+
+        # Mavjud cartni olish yoki yaratish
+        cart, created = CartModel.objects.get_or_create(user=user)
+
+        total_price_sum = 0
+
         for item_data in cart_items_data:
-            item_data['cart'] = cart  
             book = item_data.get('book')
-            quantity = item_data.get('quantity', 1)  # agar quantity yo'q bo'lsa, 1 deb olish
+            quantity = item_data.get('quantity', 1)
 
-            total_price = book.price * quantity  
-            item_data['total_price'] = total_price 
+            if not book:
+                raise serializers.ValidationError("Har bir item uchun book kiritilishi kerak.")
 
-            CartitemModel.objects.create(**item_data)
+            total_price = book.price * quantity
+            total_price_sum += total_price
+
+            CartitemModel.objects.create(
+                cart=cart,
+                book=book,
+                quantity=quantity,
+                total_price=total_price
+            )
+
+        cart.total_price += total_price_sum
+        cart.save()
 
         return cart
-
-

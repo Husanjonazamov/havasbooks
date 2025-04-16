@@ -50,7 +50,6 @@ class CartitemModel(AbstractBaseModel):
         default=0.00
     )
     
-
     def __str__(self):
         return self.book.name
 
