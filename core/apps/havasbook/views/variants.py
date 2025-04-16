@@ -1,7 +1,7 @@
 from django_core.mixins import BaseViewSetMixin
 from drf_spectacular.utils import extend_schema
 from rest_framework.permissions import AllowAny
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from ..models import ColorModel, SizeModel
 from ..serializers.variants import (
@@ -12,6 +12,8 @@ from ..serializers.variants import (
     RetrieveColorSerializer,
     RetrieveSizeSerializer,
 )
+
+
 
 
 @extend_schema(tags=["color"])
@@ -26,6 +28,14 @@ class ColorView(BaseViewSetMixin, ReadOnlyModelViewSet):
         "retrieve": RetrieveColorSerializer,
         "create": CreateColorSerializer,
     }
+
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+
 
 
 @extend_schema(tags=["size"])

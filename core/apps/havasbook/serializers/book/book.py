@@ -3,6 +3,9 @@ from ...models import BookModel
 from decimal import Decimal
 
 
+from django.conf import settings
+
+
 class BaseBookSerializer(serializers.ModelSerializer):
     color = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
@@ -34,9 +37,9 @@ class BaseBookSerializer(serializers.ModelSerializer):
     
     
     def get_color(self, obj):
-        from core.apps.havasbook.serializers import ListColorSerializer
-
-        return ListColorSerializer(obj.color, many=True).data
+        from core.apps.havasbook.serializers.variants import BaseColorSerializer
+        request = self.context.get('request')
+        return BaseColorSerializer(obj.color.all(), many=True, context={'request': request}).data
 
     def get_size(self, obj):
         from core.apps.havasbook.serializers import ListSizeSerializer
