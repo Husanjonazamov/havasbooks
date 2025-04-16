@@ -9,7 +9,10 @@ class PreorderModel(AbstractBaseModel):
         on_delete=models.CASCADE,
         related_name="book"
     )
-
+    count = models.PositiveIntegerField(
+        _("Mahlulot Soni"),
+        default=1
+    )
     user_name = models.CharField(
         _("Foydalanuvchi ismi"),
         max_length=250, 

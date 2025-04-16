@@ -13,6 +13,7 @@ class BasePreorderSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "book",
+            'count',
             "user_name",
             "phone"
         ]
@@ -35,6 +36,7 @@ class CreatePreorderSerializer(BasePreorderSerializer):
         fields = [
             'id',
             'book',
+            'count',
             'user_name',
             'phone'
         ]
@@ -43,11 +45,13 @@ class CreatePreorderSerializer(BasePreorderSerializer):
     def create(self, validated_data):
         book_data = validated_data.get('book').id
         book = BookModel.objects.get(id=book_data)
+        count = validated_data.get('count')
         user_name = validated_data.get('user_name')
         phone = validated_data.get('phone')
 
         preorder = PreorderModel.objects.create(
             book=book,
+            count=count,
             user_name=user_name,
             phone=phone
         )

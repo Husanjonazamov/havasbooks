@@ -33,9 +33,8 @@ class RetrieveOrderSerializer(BaseOrderSerializer):
 
 
 
-
 class CreateOrderSerializer(serializers.ModelSerializer):
-    order_item = CreateOrderitemSerializer(many=True)  # Bir nechta order_item
+    order_item = CreateOrderitemSerializer(many=True)
 
     class Meta:
         model = OrderModel
@@ -44,30 +43,40 @@ class CreateOrderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         order_item_data = validated_data.pop('order_item', None)
 
-        # Order yaratish
+        total_price = 0
+
         order = OrderModel.objects.create(**validated_data)
 
-        # Order item larini yaratish
         for item_data in order_item_data:
             book = item_data['book']
+            quantity = item_data['quantity']
+
             book_id = book.id if isinstance(book, BookModel) else book
 
-            # Kitobning mavjudligini tekshirish
-            if not BookModel.objects.filter(id=book_id).exists():
+            try:
+                book_instance = BookModel.objects.get(id=book_id)
+            except BookModel.DoesNotExist:
                 raise serializers.ValidationError(f"Kitob ID {book_id} mavjud emas.")
 
-            # Order item yaratish
+            # Narxni hisoblash
+            price = book_instance.price
+            item_total = price * quantity
+            total_price += item_total
+
+            # Order itemni saqlash
             OrderitemModel.objects.create(
                 order=order,
-                book_id=book_id,
-                quantity=item_data['quantity'],
-                price=item_data['price']
+                book=book_instance,
+                quantity=quantity,
+                price=price  # Foydalanuvchidan emas, modeldan kelgan narx
             )
 
-        # Location olish va Telegramga yuborish
+        order.total_amount = total_price
+        order.save()
+
+        # Location va Telegram
         location_id = validated_data.get('location')
         try:
-            # Location topish
             location = LocationModel.objects.get(id=location_id.id if hasattr(location_id, 'id') else location_id)
             send_order_to_telegram(
                 order=order,

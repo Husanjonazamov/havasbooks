@@ -40,5 +40,4 @@ class CreateOrderitemSerializer(serializers.ModelSerializer):
         fields = [
             'book',
             'quantity',
-            'price',
         ]
