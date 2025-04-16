@@ -4,6 +4,7 @@ from django_core.models import AbstractBaseModel
 
 
 class ColorModel(AbstractBaseModel):
+    title = models.CharField(_("Rang"))
     name = models.CharField(_("Rang Nomi"), max_length=50)
     image = models.ImageField(_("Rangi"), upload_to="book-color/")
 
@@ -24,7 +25,8 @@ class ColorModel(AbstractBaseModel):
 
 
 class SizeModel(AbstractBaseModel):
-    name = models.CharField(_("name"), max_length=255)
+    title = models.CharField(_("O'lcham"))
+    name = models.CharField(_("O'lcham nomi"), max_length=255)
 
     def __str__(self):
         return self.name

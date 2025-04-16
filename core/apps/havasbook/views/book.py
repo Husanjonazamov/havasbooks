@@ -38,6 +38,7 @@ class BooksSearchView(ModelViewSet):
 
 
 
+
 @extend_schema(tags=["book"])
 class BookView(BaseViewSetMixin, ReadOnlyModelViewSet):
     queryset = BookModel.objects.all()
@@ -57,6 +58,10 @@ class BookView(BaseViewSetMixin, ReadOnlyModelViewSet):
         "create": CreateBookSerializer,
     }
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()  # `BaseViewSetMixin`ni chaqiradi
+        context['request'] = self.request           # `request`ni qo‘shadi
+        return context
 
 
 

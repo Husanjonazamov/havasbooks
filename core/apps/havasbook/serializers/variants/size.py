@@ -6,9 +6,10 @@ from ...models import SizeModel
 class BaseSizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = SizeModel
-        exclude = [
-            "created_at",
-            "updated_at",
+        fields = [
+            'id',
+            'title',
+            'name'
         ]
 
 

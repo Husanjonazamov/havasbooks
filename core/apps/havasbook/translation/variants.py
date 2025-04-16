@@ -5,9 +5,15 @@ from ..models import ColorModel, SizeModel
 
 @register(ColorModel)
 class ColorTranslation(TranslationOptions):
-    fields = []
+    fields = [
+        'title',
+        'name'
+    ]
 
 
 @register(SizeModel)
 class SizeTranslation(TranslationOptions):
-    fields = []
+    fields = [
+        'title',
+        'name'
+    ]

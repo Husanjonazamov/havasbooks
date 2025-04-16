@@ -7,14 +7,16 @@ class BaseColorSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     class Meta:
         model = ColorModel
-        exclude = [
-            "created_at",
-            "updated_at",
+        fields = [
+            'id',
+            'image',
+            'title',
+            'name'
         ]
 
     def get_image(self, obj):
-        request = self.context.get('request')
-        if obj.image and hasattr(obj.image, 'url'):
+        request = self.context.get('request', None)
+        if request is not None and obj.image and hasattr(obj.image, 'url'):
             return request.build_absolute_uri(obj.image.url)
         return None
 
