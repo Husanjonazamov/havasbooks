@@ -72,12 +72,19 @@ class RetrieveBookSerializer(BaseBookSerializer):
             'category',
             'name',
             'description',
+            'images',
+            'color',
+            'size',
             'original_price',
             'discount_percent',
             'price',
             'quantity',
+            'sold_count',
+            'view_count',
+            'is_preorder',
             'is_discount',
-            'images'
+            'images',
+            'created_at',
         ]
         
     def get_images(self, obj):
