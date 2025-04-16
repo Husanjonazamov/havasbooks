@@ -38,16 +38,14 @@ class RetrieveCartitemSerializer(BaseCartitemSerializer):
 
 
 class CreateCartitemSerializer(serializers.ModelSerializer):
-    cart = serializers.PrimaryKeyRelatedField(
-        queryset=CartModel.objects.all(), 
-        required=False, 
-        allow_null=True
-    )
+    
+    book = serializers.PrimaryKeyRelatedField(queryset=BookModel.objects.all())
+    quantity = serializers.IntegerField(min_value=1)
+    
     class Meta:
         model = CartitemModel
         fields = [
             'id',
-            'cart',
             'book',
             'quantity',
             'total_price'

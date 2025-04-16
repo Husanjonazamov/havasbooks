@@ -43,11 +43,10 @@ class RetrieveCartSerializer(BaseCartSerializer):
     class Meta(BaseCartSerializer.Meta): ...
 
 
+from decimal import Decimal
+
 class CreateCartSerializer(BaseCartSerializer):
-    cart_items = serializers.ListField(
-        child=CreateCartitemSerializer(),
-        required=True
-    )
+    cart_items = CreateCartitemSerializer(many=True, required=True)
 
     class Meta(BaseCartSerializer.Meta):
         model = CartModel
@@ -66,19 +65,18 @@ class CreateCartSerializer(BaseCartSerializer):
 
         cart_items_data = validated_data.pop('cart_items')
 
-        # Mavjud cartni olish yoki yaratish
         cart, created = CartModel.objects.get_or_create(user=user)
 
-        total_price_sum = 0
+        total_price_sum = Decimal('0.00')  # Start with a Decimal
 
         for item_data in cart_items_data:
             book = item_data.get('book')
             quantity = item_data.get('quantity', 1)
 
             if not book:
-                raise serializers.ValidationError("Har bir item uchun book kiritilishi kerak.")
+                raise serializers.ValidationError("Item uchun book kiritilishi kerak.")
 
-            total_price = book.price * quantity
+            total_price = Decimal(book.price) * Decimal(quantity)  # Ensure it's Decimal
             total_price_sum += total_price
 
             CartitemModel.objects.create(
@@ -88,7 +86,8 @@ class CreateCartSerializer(BaseCartSerializer):
                 total_price=total_price
             )
 
-        cart.total_price += total_price_sum
+        # Ensure cart.total_price is also Decimal
+        cart.total_price = Decimal(cart.total_price) + total_price_sum
         cart.save()
 
         return cart

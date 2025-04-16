@@ -36,7 +36,7 @@ class CartView(BaseViewSetMixin, ModelViewSet):
         "retrieve": RetrieveCartSerializer,
         "create": CreateCartSerializer,
     }
-    
+
     
 
 @extend_schema(tags=["cartItem"])
