@@ -26,6 +26,7 @@ class BaseBookSerializer(serializers.ModelSerializer):
             'sold_count',
             'view_count',
             'is_discount',
+            'popular',
             'is_preorder',
             'created_at',
         ]
@@ -81,6 +82,7 @@ class RetrieveBookSerializer(BaseBookSerializer):
             'quantity',
             'sold_count',
             'view_count',
+            'popular',
             'is_preorder',
             'is_discount',
             'images',

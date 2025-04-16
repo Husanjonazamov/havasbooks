@@ -55,6 +55,10 @@ class BookModel(AbstractBaseModel):
         _("Ko'rishlar soni"),
         default=0
     )
+    popular = models.BooleanField(
+        _("Mashhurmi ?"),
+        default=False
+    )
 
     is_preorder = models.BooleanField(  
         _("Oldindan buyurtma bormi?"),
