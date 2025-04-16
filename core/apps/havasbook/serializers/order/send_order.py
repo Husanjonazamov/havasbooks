@@ -2,20 +2,23 @@ import telebot
 from telebot import types
 from telebot.types import InputMediaPhoto
 from core.apps.havasbook.models import BookModel, LocationModel
+from core.apps.havasbook.serializers.order.generate_link import send_payment_options
+
+
 
 bot = telebot.TeleBot("7178118588:AAHtJ8mKY-ChU0yyxiyWhcVogURQwki61_Y")
 
 def send_order_to_telegram(order, location_name, latitude, longitude):
+
+    send_payment_options(order, bot)
     chat_id = "-1002264446732"
     google_maps_url = f"https://yandex.com/maps/?pt={longitude},{latitude}&z=14&l=map"
 
-    # 🧭 Tugma (manzil uchun)
     markup = types.InlineKeyboardMarkup()
     markup.add(types.InlineKeyboardButton("📍 Manzilni ko‘rish", url=google_maps_url))
 
     order_items = order.order_item.all()
 
-    # 🧾 Buyurtma haqida asosiy caption
     caption = (
         f"📦 <b>Yangi Buyurtma</b> #{order.id}\n\n"
         f"👤 <b>Mijoz raqami:</b> {order.phone}\n"
@@ -28,7 +31,6 @@ def send_order_to_telegram(order, location_name, latitude, longitude):
 
     image_paths = []
 
-    # 🔢 Kitoblar tartib raqami bilan chiqariladi
     for idx, item in enumerate(order_items, 1):
         book = item.book
         caption += (
@@ -39,7 +41,6 @@ def send_order_to_telegram(order, location_name, latitude, longitude):
         if book.image:
             image_paths.append(book.image.path)
 
-    # 🖼️ Rasmlar bo‘yicha ishlov
     if len(image_paths) > 1:
         media_group = []
         for idx, path in enumerate(image_paths):
@@ -51,7 +52,6 @@ def send_order_to_telegram(order, location_name, latitude, longitude):
                     media_group.append(InputMediaPhoto(img_data))
         bot.send_media_group(chat_id=chat_id, media=media_group)
 
-        # 📍 Manzil tugmasi alohida yuboriladi
         bot.send_message(
             chat_id=chat_id,
             text="📍 <b>Manzilni ko‘rish uchun tugmani bosing:</b>",
