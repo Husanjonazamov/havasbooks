@@ -58,6 +58,10 @@ class BookView(BaseViewSetMixin, ReadOnlyModelViewSet):
         "create": CreateBookSerializer,
     }
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 @extend_schema(tags=["bookImage"])
 class BookimageView(BaseViewSetMixin, ReadOnlyModelViewSet):
@@ -72,3 +76,9 @@ class BookimageView(BaseViewSetMixin, ReadOnlyModelViewSet):
         "retrieve": RetrieveBookimageSerializer,
         "create": CreateBookimageSerializer,
     }
+
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context

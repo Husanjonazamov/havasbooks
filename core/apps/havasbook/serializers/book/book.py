@@ -91,9 +91,11 @@ class RetrieveBookSerializer(BaseBookSerializer):
         
     def get_images(self, obj):
         from core.apps.havasbook.serializers.book import ListBookimageSerializer
-        images = obj.images.all()
-        
-        return ListBookimageSerializer(images, many=True).data
+        image_instance = obj.images.first()
+        if image_instance:
+            return ListBookimageSerializer(image_instance, context=self.context).data
+        return None
+
         
 
 class CreateBookSerializer(BaseBookSerializer):
