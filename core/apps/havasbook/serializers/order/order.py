@@ -7,8 +7,10 @@ from core.apps.havasbook.serializers.location import ListLocationSerializer
 from core.apps.havasbook.serializers import ListBookSerializer
 from .send_order import send_order_to_telegram
 from core.apps.havasbook.models.location import LocationModel
+from core.apps.havasbook.serializers.order.orderITem import OrderItemSerializers
 
 class BaseOrderSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = OrderModel
         fields = [
@@ -20,12 +22,27 @@ class BaseOrderSerializer(serializers.ModelSerializer):
             'payment_method',
             'total_amount',
             'status',
-            'comment'
+            'comment',
+        ]
+
+class ListOrderSerializer(BaseOrderSerializer):
+    order_item = OrderItemSerializers(many=True)  
+
+    class Meta(BaseOrderSerializer.Meta): 
+        fields = [
+            'id',
+            'user',
+            "phone",
+            'location',
+            'delivery_method',
+            'payment_method',
+            'total_amount',
+            'status',
+            'comment',
+            'order_item' 
         ]
 
 
-class ListOrderSerializer(BaseOrderSerializer):
-    class Meta(BaseOrderSerializer.Meta): ...
 
 
 class RetrieveOrderSerializer(BaseOrderSerializer):

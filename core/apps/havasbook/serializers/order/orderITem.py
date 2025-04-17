@@ -41,3 +41,20 @@ class CreateOrderitemSerializer(serializers.ModelSerializer):
             'book',
             'quantity',
         ]
+
+
+class OrderItemSerializers(serializers.ModelSerializer):
+    book = serializers.SerializerMethodField()
+    class Meta:
+        model = OrderitemModel
+        fields = [
+            'id',
+            'book',
+            'quantity',
+            'price'
+        ]
+
+
+    def get_book(self, obj):
+        from core.apps.havasbook.serializers.book.book import ListBookSerializer
+        return ListBookSerializer(obj.book).data
