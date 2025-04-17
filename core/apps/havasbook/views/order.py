@@ -13,8 +13,10 @@ from ..serializers.order import (
     RetrieveOrderitemSerializer,
     RetrieveOrderSerializer,
 )
-
+from django_core.paginations import CustomPagination
 from rest_framework.decorators import action
+from core.apps.havasbook.filters.order import OrderFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 @extend_schema(tags=["order"])
@@ -22,6 +24,10 @@ class OrderView(BaseViewSetMixin, ModelViewSet):
     queryset = OrderModel.objects.all()
     serializer_class = ListOrderSerializer
     permission_classes = [AllowAny]
+    filterset_class = OrderFilter
+    pagination_class = CustomPagination
+
+    filter_backends = [DjangoFilterBackend]  # ✅ SHART
 
     action_permission_classes = {}
     action_serializer_class = {
@@ -32,9 +38,17 @@ class OrderView(BaseViewSetMixin, ModelViewSet):
     @action(detail=False, methods=["get"], url_path="me", permission_classes=[IsAuthenticated])
     def me(self, request):
         user = request.user
-        queryset = self.get_queryset().filter(user=user)
+        queryset = self.filter_queryset(self.get_queryset().filter(user=user))
+        
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        # Agar pagination ishlamasa (masalan, yoqilmagan bo‘lsa)
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response({"status": True, "data": serializer.data})
+
 
 
 @extend_schema(tags=["orderITem"])

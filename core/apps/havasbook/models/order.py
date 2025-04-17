@@ -17,7 +17,7 @@ class PaymentMethodChoice(models.TextChoices):
     UZUM = "uzum_card", _("Uzum karta")
 
 
-
+ 
 class OrderStatus(models.TextChoices):
     NEW = "new", _("Yangi")
     DELIVERED = "delivered", _("Topshirilgan")
