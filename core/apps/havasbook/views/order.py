@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 
-from ..models import OrderitemModel, OrderModel
+from ..models import OrderitemModel, OrderModel, OrderStatus
 from ..serializers.order import (
     CreateOrderitemSerializer,
     CreateOrderSerializer,
@@ -12,11 +12,16 @@ from ..serializers.order import (
     ListOrderSerializer,
     RetrieveOrderitemSerializer,
     RetrieveOrderSerializer,
+    OrderStatusSerializers
 )
 from django_core.paginations import CustomPagination
 from rest_framework.decorators import action
 from core.apps.havasbook.filters.order import OrderFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from ..serializers.order.cencel_order import send_cancel_order
+from rest_framework import status
+
+
 
 
 @extend_schema(tags=["order"])
@@ -45,9 +50,34 @@ class OrderView(BaseViewSetMixin, ModelViewSet):
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        # Agar pagination ishlamasa (masalan, yoqilmagan bo‘lsa)
         serializer = self.get_serializer(queryset, many=True)
         return Response({"status": True, "data": serializer.data})
+
+    @action(detail=True, methods=["patch"], url_path="cancel", permission_classes=[IsAuthenticated])
+    def cancel_order(self, request, pk=None):
+        try:
+            order = self.get_object()
+
+            if order.user != request.user:
+                return Response({"detail": "You are not allowed to cancel this order."}, status=status.HTTP_403_FORBIDDEN)
+
+            if order.status == OrderStatus.CANCELLED:
+                return Response({"detail": "Order is already cancelled."}, status=status.HTTP_400_BAD_REQUEST)
+
+            serializer = OrderStatusSerializers(order, data={"status": OrderStatus.CANCELLED}, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+
+                send_cancel_order(order)
+
+                return Response({"status": True, "data": {"message": "Order successfully cancelled."}}, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except OrderModel.DoesNotExist:
+            return Response({"detail": "Order not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        
 
 
 

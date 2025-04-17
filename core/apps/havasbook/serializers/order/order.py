@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ...models import OrderModel, OrderitemModel
+from ...models import OrderModel, OrderitemModel, OrderStatus
 from core.apps.havasbook.serializers.order.orderITem import CreateOrderitemSerializer
 from core.apps.havasbook.models.book import BookModel
 from core.apps.havasbook.serializers.location import ListLocationSerializer
@@ -105,3 +105,20 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             print("Location topilmadi, Telegramga yuborilmadi.")
 
         return order
+
+
+
+
+class OrderStatusSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = OrderModel
+        fields = [
+            'status'
+        ]
+
+    def validate_status(self, value):
+        valid_statuses = [status.value for status in OrderStatus]
+        if value not in valid_statuses:
+            raise serializers.ValidationError("Invalid status.")
+        return value
+
