@@ -14,7 +14,9 @@ APPS = [
     "rest_framework_simplejwt",
     "django_core",
     "core.apps.accounts.apps.AccountsConfig",
-    'core.apps.havasbook'
+    'core.apps.havasbook',
+    'core.apps.user',
+
 ]
 
 if env.str("PROJECT_ENV") == "debug":
