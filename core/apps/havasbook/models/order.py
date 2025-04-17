@@ -18,6 +18,12 @@ class PaymentMethodChoice(models.TextChoices):
 
 
 
+class OrderStatus(models.TextChoices):
+    NEW = "new", _("Yangi")
+    DELIVERED = "delivered", _("Topshirilgan")
+    CANCELLED = "cancelled", _("Bekor qilingan")
+
+
 class OrderModel(AbstractBaseModel):
     user = models.ForeignKey(
         User, 
@@ -41,7 +47,12 @@ class OrderModel(AbstractBaseModel):
         default='click'
     )
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
-    status = models.CharField(_("Status"), max_length=50, default='pending')  
+    status = models.CharField(
+        _("Status"),
+        max_length=50,
+        choices=OrderStatus.choices,
+        default=OrderStatus.NEW
+    )  
     comment = models.TextField(_("Buyrtma uchun izoh"), null=True, blank=True) 
     
 
