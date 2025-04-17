@@ -43,7 +43,8 @@ class RetrieveCartSerializer(BaseCartSerializer):
     class Meta(BaseCartSerializer.Meta): ...
 
 
-from decimal import Decimal
+
+
 
 class CreateCartSerializer(BaseCartSerializer):
     cart_items = CreateCartitemSerializer(many=True, required=True)
@@ -67,11 +68,13 @@ class CreateCartSerializer(BaseCartSerializer):
 
         cart, created = CartModel.objects.get_or_create(user=user)
 
-        total_price_sum = Decimal('0.00')  # Start with a Decimal
+        total_price_sum = Decimal('0.00') 
 
         for item_data in cart_items_data:
             book = item_data.get('book')
-            quantity = item_data.get('quantity', 1)
+            color = item_data.get('color')  
+            size = item_data.get('size')   
+            quantity = 1  # Default quantity
 
             if not book:
                 raise serializers.ValidationError("Item uchun book kiritilishi kerak.")
@@ -79,13 +82,31 @@ class CreateCartSerializer(BaseCartSerializer):
             total_price = Decimal(book.price) * Decimal(quantity)  
             total_price_sum += total_price
 
-            CartitemModel.objects.create(
+            # Tekshiruv: agar bunday mahsulot allaqachon mavjud bo'lsa, quantity-ni oshiramiz
+            existing_item = CartitemModel.objects.filter(
                 cart=cart,
                 book=book,
-                quantity=quantity,
-                total_price=total_price,
-            )
+                color=color,
+                size=size
+            ).first()
 
+            if existing_item:
+                # Agar mahsulot mavjud bo'lsa, faqat quantity ni oshiramiz
+                existing_item.quantity += 1
+                existing_item.total_price = existing_item.book.price * existing_item.quantity
+                existing_item.save()
+            else:
+                # Yangi item yaratish
+                CartitemModel.objects.create(
+                    cart=cart,
+                    book=book,
+                    color=color,  
+                    size=size,    
+                    quantity=quantity,  
+                    total_price=total_price,
+                )
+
+        # Savatdagi umumiy narxni yangilash
         cart.total_price = Decimal(cart.total_price) + total_price_sum
         cart.save()
 

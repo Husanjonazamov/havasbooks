@@ -8,6 +8,9 @@ from core.apps.havasbook.models.variants import ColorModel, SizeModel
 class BaseCartitemSerializer(serializers.ModelSerializer):
     book = serializers.SerializerMethodField() 
     cart = serializers.SerializerMethodField()
+    color = serializers.SerializerMethodField()
+    size = serializers.SerializerMethodField()
+
     
     
     class Meta:
@@ -16,6 +19,8 @@ class BaseCartitemSerializer(serializers.ModelSerializer):
             'id',
             'cart',
             'book',
+            'color',
+            'size',
             'quantity',
             'total_price'
         ]
@@ -29,17 +34,17 @@ class BaseCartitemSerializer(serializers.ModelSerializer):
         return ListBookSerializer(obj.book).data  # Bookni get qilish
 
 
-    # def get_color(self, obj):
-    #     if obj.color:
-    #         from core.apps.havasbook.serializers.variants import ListColorSerializer
-    #         return ListColorSerializer(obj.color).data
-    #     return None
+    def get_color(self, obj):
+        if obj.color:
+            from core.apps.havasbook.serializers.variants import ListColorSerializer
+            return ListColorSerializer(obj.color).data
+        return None
 
-    # def get_size(self, obj):
-    #     if obj.size:
-    #         from core.apps.havasbook.serializers.variants import ListSizeSerializer
-    #         return ListSizeSerializer(obj.size).data
-    #     return None
+    def get_size(self, obj):
+        if obj.size:
+            from core.apps.havasbook.serializers.variants import ListSizeSerializer
+            return ListSizeSerializer(obj.size).data
+        return None
 
 
 
@@ -55,14 +60,17 @@ class RetrieveCartitemSerializer(BaseCartitemSerializer):
 
 class CreateCartitemSerializer(serializers.ModelSerializer):
     book = serializers.PrimaryKeyRelatedField(queryset=BookModel.objects.all())
-
-    quantity = serializers.IntegerField(min_value=1)
+    color = serializers.PrimaryKeyRelatedField(queryset=ColorModel.objects.all(), required=False, allow_null=True)
+    size = serializers.PrimaryKeyRelatedField(queryset=SizeModel.objects.all(), required=False, allow_null=True)
+    quantity = serializers.IntegerField(min_value=1, default=1)
     
     class Meta:
         model = CartitemModel
         fields = [
             'id',
             'book',
+            'color',
+            'size',
             'quantity',
             'total_price'
         ]

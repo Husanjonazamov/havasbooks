@@ -44,7 +44,18 @@ class CartitemModel(AbstractBaseModel):
         on_delete=models.CASCADE
     )
     quantity = models.PositiveBigIntegerField(_("Mahsulot soni"), default=1)
-   
+    color = models.ForeignKey(
+        'havasbook.ColorModel',
+        on_delete=models.CASCADE,
+        null=True, 
+        blank=True
+    )
+    size = models.ForeignKey(
+        'havasbook.SizeModel',
+        on_delete=models.CASCADE,
+        null=True, 
+        blank=True
+    )
     total_price = models.DecimalField(
         max_digits=20,
         decimal_places=2,
