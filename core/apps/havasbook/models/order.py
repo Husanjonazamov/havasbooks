@@ -54,7 +54,7 @@ class OrderModel(AbstractBaseModel):
         default=OrderStatus.NEW
     )  
     comment = models.TextField(_("Buyrtma uchun izoh"), null=True, blank=True) 
-    
+
 
     def __str__(self):
         return self.user.first_name 

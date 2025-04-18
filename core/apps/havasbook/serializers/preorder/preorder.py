@@ -4,23 +4,61 @@ from ...models import PreorderModel
 from core.apps.havasbook.models.book import BookModel
 from core.apps.havasbook.serializers.book import BaseBookSerializer
 
+from core.apps.havasbook.models import ColorModel, SizeModel
+
+
+
 
 
 class BasePreorderSerializer(serializers.ModelSerializer):
     book = serializers.SerializerMethodField()
+
     class Meta:
         model = PreorderModel
         fields = [
             "id",
-            "user",
             "book",
-            'count',
+            "created_at",
             "user_name",
-            "phone"
+            "phone",
+            "count",
+            "status",
+            "total_price"
         ]
 
     def get_book(self, obj):
-        return BaseBookSerializer(obj.book).data
+        book = obj.book
+        request = self.context.get('request') 
+
+        image_url = book.image.url if book.image else None
+        if image_url and request:
+            image_url = request.build_absolute_uri(image_url)
+
+        return {
+            "id": book.id,  
+            "name": book.name,  # type: str
+            "image": image_url,  # type: str
+            "color": obj.color.name if obj.color else None,  # type: str | None
+            "size": obj.size.name if obj.size else None,  # type: str | None
+            "price": str(book.price),  # type: str
+            "original_price": str(book.original_price),  # type: str
+            "discount_percent": str(book.discount_percent),  # type: str
+            "description": book.description,  # type: str
+        }
+
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        
+        # Fields with the correct types as str
+        representation["created_at"] = str(instance.created_at)  # type: str
+        representation["user_name"] = str(instance.user_name)  # type: str
+        representation["phone"] = str(instance.phone)  # type: str
+        representation["count"] = str(instance.count)  # type: str
+        representation["status"] = str(instance.status)  # type: str
+        representation["total_price"] = str(instance.total_price)  # type: str
+        
+        return representation
 
 class ListPreorderSerializer(BasePreorderSerializer):
     class Meta(BasePreorderSerializer.Meta): ...
@@ -29,40 +67,50 @@ class ListPreorderSerializer(BasePreorderSerializer):
 class RetrievePreorderSerializer(BasePreorderSerializer):
     class Meta(BasePreorderSerializer.Meta): ...
 
-
 class CreatePreorderSerializer(BasePreorderSerializer):
     book = serializers.PrimaryKeyRelatedField(queryset=BookModel.objects.all())
+    color = serializers.PrimaryKeyRelatedField(
+        queryset=ColorModel.objects.all(), required=False, allow_null=True
+    )
+    size = serializers.PrimaryKeyRelatedField(
+        queryset=SizeModel.objects.all(), required=False, allow_null=True
+    )
 
     class Meta(BasePreorderSerializer.Meta):
         fields = [
             'id',
             'book',
+            'color', 
+            'size',
             'count',
             'user_name',
             'phone'
         ]
 
-
     def create(self, validated_data):
-        book_data = validated_data.get('book').id
-        book = BookModel.objects.get(id=book_data)
-        count = validated_data.get('count')
-        user_name = validated_data.get('user_name')
-        phone = validated_data.get('phone')
         user = self.context['request'].user
 
         if user.is_anonymous:
             raise serializers.ValidationError("Foydalanuvchi autentifikatsiya qilinmagan.")
 
+        # Kitob narxini olish
+        book = validated_data['book']
+        book_price = book.price  # Kitobning narxini olish
 
+        # Countga qarab total_priceni hisoblash
+        count = validated_data['count']
+        total_price = book_price * count  # total_price hisoblash
 
+        # PreorderModel yaratish
         preorder = PreorderModel.objects.create(
             user=user,
             book=book,
             count=count,
-            user_name=user_name,
-            phone=phone
+            user_name=validated_data['user_name'],
+            phone=validated_data['phone'],
+            color=validated_data.get('color') or None,
+            size=validated_data.get('size') or None,
+            total_price=total_price  # total_priceni saqlash
         )
 
         return preorder
-
