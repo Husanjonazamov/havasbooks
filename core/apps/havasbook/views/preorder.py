@@ -17,7 +17,7 @@ class PreorderView(BaseViewSetMixin, ModelViewSet):
     queryset = PreorderModel.objects.all()
     serializer_class = ListPreorderSerializer
     permission_classes = [AllowAny]
-    filterset_class = OrderFilter
+    # filterset_class = OrderFilter
     pagination_class = CustomPagination
 
     filter_backends = [DjangoFilterBackend]  # ✅ SHART
@@ -33,7 +33,6 @@ class PreorderView(BaseViewSetMixin, ModelViewSet):
     @action(detail=False, methods=["get"], url_path="me", permission_classes=[IsAuthenticated])
     def me(self, request):
         user = request.user
-        raise Exception(user)
         queryset = self.filter_queryset(self.get_queryset().filter(user=user))        
         page = self.paginate_queryset(queryset)
         if page is not None:

@@ -12,6 +12,7 @@ class BasePreorderSerializer(serializers.ModelSerializer):
         model = PreorderModel
         fields = [
             "id",
+            "user",
             "book",
             'count',
             "user_name",

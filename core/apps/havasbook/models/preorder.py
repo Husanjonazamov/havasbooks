@@ -1,9 +1,16 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_core.models import AbstractBaseModel
+from core.apps.accounts.models import User
+
 
 
 class PreorderModel(AbstractBaseModel):
+    user = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE,
+        related_name="preorder"
+    )
     book = models.ForeignKey(
         'havasbook.BookModel',
         on_delete=models.CASCADE,
