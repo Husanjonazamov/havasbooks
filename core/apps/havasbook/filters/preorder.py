@@ -1,11 +1,13 @@
-from django_filters import rest_framework as filters
+import django_filters
+from core.apps.havasbook.models.preorder import PreorderModel, Status
 
-from ..models import PreorderModel
-
-
-class PreorderFilter(filters.FilterSet):
-    name = filters.CharFilter(field_name="name", lookup_expr="icontains")
+class PreorderFilter(django_filters.FilterSet):
+    status = django_filters.ChoiceFilter(
+        choices=Status.choices, 
+        label="Status"
+    )
+    user_name = django_filters.CharFilter(lookup_expr='icontains', label="Foydalanuvchi ismi")
 
     class Meta:
         model = PreorderModel
-        fields = ("name",)
+        fields = ['status', 'user_name']

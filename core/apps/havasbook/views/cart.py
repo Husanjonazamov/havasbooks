@@ -69,6 +69,7 @@ class CartitemView(BaseViewSetMixin, ReadOnlyModelViewSet):
 
         return Response({'status': True}, status=status.HTTP_200_OK)
 
+
     def patch(self, request, pk=None):
         self.permission_classes = [IsAuthenticated]
     

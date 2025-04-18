@@ -7,7 +7,7 @@ from ..models import PreorderModel
 from ..serializers.preorder import CreatePreorderSerializer, ListPreorderSerializer, RetrievePreorderSerializer
 from django_core.paginations import CustomPagination
 from rest_framework.decorators import action
-from core.apps.havasbook.filters.order import OrderFilter
+from core.apps.havasbook.filters.preorder import PreorderFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 
@@ -17,10 +17,10 @@ class PreorderView(BaseViewSetMixin, ModelViewSet):
     queryset = PreorderModel.objects.all()
     serializer_class = ListPreorderSerializer
     permission_classes = [AllowAny]
-    # filterset_class = OrderFilter
+    filterset_class = PreorderFilter
     pagination_class = CustomPagination
 
-    filter_backends = [DjangoFilterBackend]  # ✅ SHART
+    filter_backends = [DjangoFilterBackend] 
 
     action_permission_classes = {}
     action_serializer_class = {
@@ -33,7 +33,10 @@ class PreorderView(BaseViewSetMixin, ModelViewSet):
     @action(detail=False, methods=["get"], url_path="me", permission_classes=[IsAuthenticated])
     def me(self, request):
         user = request.user
-        queryset = self.filter_queryset(self.get_queryset().filter(user=user))        
+        queryset = self.filter_queryset(
+            self.get_queryset().filter(user=user)
+        )
+
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
