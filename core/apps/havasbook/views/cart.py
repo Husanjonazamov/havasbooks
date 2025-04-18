@@ -20,12 +20,45 @@ from ..serializers.cart import (
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from typing import Any
+
+class CustomBaseViewSetMixin(object):
+    action_serializer_class = {}
+    action_permission_classes = {}
+
+    def finalize_response(self, request, response, *args, **kwargs):
+        if response.status_code >= 400:
+            response.data = response.data  
+        else:
+            response.data = response.data  
+
+        return super().finalize_response(request, response, *args, **kwargs)
+
+    def get_serializer_class(self) -> Any:
+        """
+        Actionga mos serializer klassini olish.
+        Agar maxsus serializer belgilanmagan bo'lsa, default serializer qaytadi.
+        """
+        return self.action_serializer_class.get(self.action, self.serializer_class)
+
+    def get_permissions(self) -> Any:
+        """
+        Actionga mos permission klasslarini olish.
+        Agar maxsus permission belgilanmagan bo'lsa, default permission qaytadi.
+        """
+        return [
+            permission()
+            for permission in self.action_permission_classes.get(
+                self.action, self.permission_classes
+            )
+        ]
+
 
 
 
 
 @extend_schema(tags=["cart"])
-class CartView(BaseViewSetMixin, ModelViewSet):
+class CartView(CustomBaseViewSetMixin, ModelViewSet):
     queryset = CartModel.objects.all()
     serializer_class = ListCartSerializer
     permission_classes = [IsAuthenticated]
@@ -36,8 +69,19 @@ class CartView(BaseViewSetMixin, ModelViewSet):
         "retrieve": RetrieveCartSerializer,
         "create": CreateCartSerializer,
     }
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset().filter(user=request.user)
+        if not queryset.exists():
+            return Response({})
+
+        cart = queryset.first()
+        serializer = self.get_serializer(cart)
+        return Response(serializer.data)
+
     
-    
+
+
 class CartitemView(BaseViewSetMixin, ReadOnlyModelViewSet):
     queryset = CartitemModel.objects.all()
     serializer_class = ListCartitemSerializer

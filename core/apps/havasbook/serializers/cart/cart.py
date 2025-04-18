@@ -35,10 +35,12 @@ class BaseCartSerializer(serializers.ModelSerializer):
 
         return rep
 
+
 class ListCartSerializer(serializers.ModelSerializer):
+    products = serializers.SerializerMethodField()
+    total_price = serializers.SerializerMethodField()
     total_quantity = serializers.SerializerMethodField()
     total_discounted_price = serializers.SerializerMethodField()
-    products = serializers.SerializerMethodField()
 
     class Meta:
         model = CartModel
@@ -49,24 +51,26 @@ class ListCartSerializer(serializers.ModelSerializer):
             'products'
         ]
 
-
-    def get_total_quantity(self, obj):
-        total_quantity = obj.cart_items.aggregate(total=Sum('quantity'))['total']
-        return total_quantity if total_quantity is not None else 0
-
-    def get_total_discounted_price(self, obj):
-        total = Decimal(0) 
-        for item in obj.cart_items.all():
-            discount = getattr(item.book, 'discount_percent', 0) or 0  
-            discounted = Decimal(item.total_price) * (Decimal(1) - Decimal(discount) / Decimal(100))
-            total += discounted
-        return round(total, 2)
     def get_products(self, obj):
         from core.apps.havasbook.serializers.cart import ListCartitemSerializer
-        items = obj.cart_items.all()
-        
-        # requestni context orqali uzatish
-        return ListCartitemSerializer(items, many=True, context=self.context).data
+        items = obj.cart_items.all()  # CartModeldagi related_name qiymatini "cart_item" deb qabul qilamiz
+        return ListCartitemSerializer(items, many=True).data
+
+    def get_total_quantity(self, obj):
+        return sum([item.quantity for item in obj.cart_items.all()])
+
+    def get_total_price(self, obj):
+        return str(sum([item.book.price * item.quantity for item in obj.cart_items.all()]))
+
+    def get_total_discounted_price(self, obj):
+        total = 0
+        for item in obj.cart_items.all():
+            if hasattr(item.book, 'get_discounted_price'):
+                total += item.book.get_discounted_price() * item.quantity
+            else:
+                total += item.book.price * item.quantity
+        return total
+
 
 
 
