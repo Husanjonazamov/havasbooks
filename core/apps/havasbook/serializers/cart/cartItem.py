@@ -10,7 +10,6 @@ class BaseCartitemSerializer(serializers.ModelSerializer):
     cart = serializers.SerializerMethodField()
     color = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
-
     
     
     class Meta:
@@ -48,8 +47,50 @@ class BaseCartitemSerializer(serializers.ModelSerializer):
 
 
 
-class ListCartitemSerializer(BaseCartitemSerializer):
-    class Meta(BaseCartitemSerializer.Meta): ...
+
+
+class ListCartitemSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='book.name')
+    color = serializers.CharField(source='color.name', default=None)
+    image = serializers.SerializerMethodField()
+    price = serializers.DecimalField(source='book.price', max_digits=10, decimal_places=2)
+    discounted_total_price = serializers.SerializerMethodField()
+    discount_percent = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CartitemModel
+        fields = [
+            'id',
+            'name',
+            'color',
+            'image',
+            'price',
+            'total_price',
+            'discounted_total_price',
+            'quantity',
+            'discount_percent',
+        ]
+
+
+    def get_image(self, obj):
+        request = self.context.get('request')
+        
+        if obj.book.image and request:
+            return request.build_absolute_uri(obj.book.image.url)
+        return None
+
+    def get_discounted_total_price(self, obj):
+        total_price = obj.total_price or 0
+        discount = getattr(obj.book, 'discount_percent', None)
+
+        if discount is None:
+            return total_price  # chegirma yo'q
+
+        return round(total_price * (1 - discount / 100), 2)
+
+
+    def get_discount_percent(self, obj):
+        return getattr(obj.book, 'discount_percent', 0)
 
 
 class RetrieveCartitemSerializer(BaseCartitemSerializer):
