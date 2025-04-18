@@ -5,10 +5,11 @@ from core.apps.accounts.models import User
 
 
 
+
 class Status(models.TextChoices):
-        NEW = 'yangi', _('Yangi')
-        ACCEPTED = 'qabul qilindi', _('Qabul qilindi')
-        CANCELLED = 'bekor qilindi', _('Bekor qilindi')
+    NEW = 'new', _('Yangi')
+    ACCEPTED = 'accepted', _('Qabul qilindi')
+    CANCELLED = 'cancelled', _('Bekor qilindi')
 
 
 

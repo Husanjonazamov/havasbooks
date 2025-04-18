@@ -49,8 +49,15 @@ class CreatePreorderSerializer(BasePreorderSerializer):
         count = validated_data.get('count')
         user_name = validated_data.get('user_name')
         phone = validated_data.get('phone')
+        user = self.context['request'].user
+
+        if user.is_anonymous:
+            raise serializers.ValidationError("Foydalanuvchi autentifikatsiya qilinmagan.")
+
+
 
         preorder = PreorderModel.objects.create(
+            user=user,
             book=book,
             count=count,
             user_name=user_name,
