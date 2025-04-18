@@ -5,6 +5,13 @@ from core.apps.accounts.models import User
 
 
 
+class Status(models.TextChoices):
+        NEW = 'yangi', _('Yangi')
+        ACCEPTED = 'qabul qilindi', _('Qabul qilindi')
+        CANCELLED = 'bekor qilindi', _('Bekor qilindi')
+
+
+
 class PreorderModel(AbstractBaseModel):
     user = models.ForeignKey(
         User, 
@@ -31,6 +38,13 @@ class PreorderModel(AbstractBaseModel):
         max_length=100,
         null=True,
         blank=True
+    )
+
+    status = models.CharField(
+        _("Status"),
+        max_length=20,
+        choices=Status.choices,
+        default=Status.NEW,
     )
 
     def __str__(self):
