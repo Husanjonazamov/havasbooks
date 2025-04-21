@@ -109,7 +109,7 @@ class CreateCartSerializer(BaseCartSerializer):
         total_price_sum = Decimal('0.00') 
 
         for item_data in cart_items_data:
-            book = item_data.get('book')
+            book = item_data.get('product_id')
             color = item_data.get('color')  
             size = item_data.get('size')   
             quantity = 1  # Default quantity

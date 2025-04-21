@@ -100,7 +100,7 @@ class RetrieveCartitemSerializer(BaseCartitemSerializer):
 
 
 class CreateCartitemSerializer(serializers.ModelSerializer):
-    book = serializers.PrimaryKeyRelatedField(queryset=BookModel.objects.all())
+    product_id = serializers.PrimaryKeyRelatedField(queryset=BookModel.objects.all(), write_only=True)  # product_id
     color = serializers.PrimaryKeyRelatedField(queryset=ColorModel.objects.all(), required=False, allow_null=True)
     size = serializers.PrimaryKeyRelatedField(queryset=SizeModel.objects.all(), required=False, allow_null=True)
     quantity = serializers.IntegerField(min_value=1, default=1)
@@ -109,7 +109,7 @@ class CreateCartitemSerializer(serializers.ModelSerializer):
         model = CartitemModel
         fields = [
             'id',
-            'book',
+            'product_id',
             'color',
             'size',
             'quantity',
@@ -117,10 +117,10 @@ class CreateCartitemSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
-        book = attrs.get('book')
+        product_id = attrs.get('product_id')
         quantity = attrs.get('quantity')
 
-        total_price = book.price * quantity
+        total_price = product_id.price * quantity
 
         attrs['total_price'] = total_price
         return attrs

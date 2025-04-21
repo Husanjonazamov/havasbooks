@@ -129,6 +129,20 @@ class CartitemView(BaseViewSetMixin, ReadOnlyModelViewSet):
         new_total_price = cart_item.book.price * quantity  
         old_total_price = cart_item.total_price  
 
+
+        if quantity == 0:
+            cart = cart_item.cart
+            cart.total_price -= cart_item.total_price
+            cart.save()
+            cart_item.delete()
+
+
+            return Response(
+                {"status": True, "message": "Mahsulot savatdan o'chirildi."},
+                status=status.HTTP_200_OK
+            )
+
+
         cart_item.quantity = quantity
         cart_item.total_price = new_total_price
         cart_item.save()
@@ -151,4 +165,33 @@ class CartitemView(BaseViewSetMixin, ReadOnlyModelViewSet):
                 }
             },
             status=status.HTTP_200_OK
+        )
+
+
+
+    @action(detail=False, methods=["delete"], url_path="clear")
+    def clear_cart(self, request):
+        if not request.user.is_authenticated:
+            return Response(
+                {"detail": "Authentication credentials were not provided."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        cart_items = CartitemModel.objects.filter(cart__user=request.user)
+
+        if not cart_items.exists():
+            return Response(
+                {"detail": "Savatchangizda mahsulotlar yo‘q"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        cart = cart_items.first().cart
+        cart_items.delete()
+
+        cart.total_price = 0
+        cart.save()
+
+        return Response(
+            {"status": True, "message": "Savatchadagi barcha mahsulotlar tozalandi"}
+            # status=status.HTTP_204_NO_CONTENT
         )
