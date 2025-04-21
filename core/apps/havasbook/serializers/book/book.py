@@ -65,7 +65,7 @@ class ListBookSerializer(BaseBookSerializer):
 
 
 class RetrieveBookSerializer(BaseBookSerializer):
-    images = serializers.SerializerMethodField()
+    # images = serializers.SerializerMethodField()
     
     class Meta(BaseBookSerializer.Meta): 
         fields = [
@@ -73,7 +73,7 @@ class RetrieveBookSerializer(BaseBookSerializer):
             'category',
             'name',
             'description',
-            'images',
+            'image',
             'color',
             'size',
             'original_price',
@@ -89,12 +89,12 @@ class RetrieveBookSerializer(BaseBookSerializer):
             'created_at',
         ]
         
-    def get_images(self, obj):
-        from core.apps.havasbook.serializers.book import ListBookimageSerializer
-        image_instance = obj.images.first()
-        if image_instance:
-            return ListBookimageSerializer(image_instance, context=self.context).data
-        return None
+    # def get_images(self, obj):
+    #     from core.apps.havasbook.serializers.book import ListBookimageSerializer
+    #     image_instance = obj.images.first()
+    #     if image_instance:
+    #         return ListBookimageSerializer(image_instance, context=self.context).data
+    #     return None
 
         
 
