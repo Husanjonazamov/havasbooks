@@ -53,7 +53,7 @@ class ListCartSerializer(serializers.ModelSerializer):
 
     def get_products(self, obj):
         from core.apps.havasbook.serializers.cart import ListCartitemSerializer
-        items = obj.cart_items.all()  # CartModeldagi related_name qiymatini "cart_item" deb qabul qilamiz
+        items = obj.cart_items.all()  
         return ListCartitemSerializer(items, many=True).data
 
     def get_total_quantity(self, obj):
@@ -63,13 +63,14 @@ class ListCartSerializer(serializers.ModelSerializer):
         return str(sum([item.book.price * item.quantity for item in obj.cart_items.all()]))
 
     def get_total_discounted_price(self, obj):
-        total = 0
-        for item in obj.cart_items.all():
-            if hasattr(item.book, 'get_discounted_price'):
-                total += item.book.get_discounted_price() * item.quantity
-            else:
-                total += item.book.price * item.quantity
-        return total
+        from core.apps.havasbook.serializers.cart import ListCartitemSerializer
+
+        total = Decimal('0.00')
+        serialized_items = ListCartitemSerializer(obj.cart_items.all(), many=True, context=self.context).data
+        for item in serialized_items:
+            discounted = Decimal(item.get("discounted_total_price", 0))
+            total += discounted
+        return total.quantize(Decimal("0.01"))
 
 
 
@@ -109,7 +110,7 @@ class CreateCartSerializer(BaseCartSerializer):
         total_price_sum = Decimal('0.00') 
 
         for item_data in cart_items_data:
-            book = item_data.get('product_id')
+            book = item_data.get('book')
             color = item_data.get('color')  
             size = item_data.get('size')   
             quantity = 1  # Default quantity

@@ -48,7 +48,11 @@ class BaseCartitemSerializer(serializers.ModelSerializer):
 
 
 
+from decimal import Decimal
+from rest_framework import serializers
+
 class ListCartitemSerializer(serializers.ModelSerializer):
+    product_id = serializers.IntegerField(source="book.id")
     name = serializers.CharField(source='book.name')
     color = serializers.CharField(source='color.name', default=None)
     size = serializers.CharField(source='size.name', default=None)
@@ -57,11 +61,13 @@ class ListCartitemSerializer(serializers.ModelSerializer):
     discounted_total_price = serializers.SerializerMethodField()
     discount_percent = serializers.SerializerMethodField()
     available_quantity = serializers.SerializerMethodField()
+    total_price = serializers.SerializerMethodField()  # ✅ total_price ham qo'shamiz
 
     class Meta:
         model = CartitemModel
         fields = [
             'id',
+            'product_id',
             'name',
             'color',
             'size',
@@ -74,30 +80,31 @@ class ListCartitemSerializer(serializers.ModelSerializer):
             'available_quantity'
         ]
 
-
     def get_image(self, obj):
         request = self.context.get('request')
-        
         if obj.book.image and request:
             return request.build_absolute_uri(obj.book.image.url)
         return None
 
+    def get_total_price(self, obj):
+        return Decimal(obj.book.price) * obj.quantity
+
     def get_discounted_total_price(self, obj):
-        total_price = obj.total_price or 0
-        discount = getattr(obj.book, 'discount_percent', None)
+        price = Decimal(obj.book.price)
+        quantity = obj.quantity
+        discount = getattr(obj.book, 'discount_percent', 0) or 0
 
-        if discount is None:
-            return total_price  # chegirma yo'q
-
-        return round(total_price * (1 - discount / 100), 2)
-
+        discounted_price = price * (Decimal(1) - Decimal(discount) / 100)
+        return discounted_price * quantity
 
     def get_discount_percent(self, obj):
         return getattr(obj.book, 'discount_percent', 0)
 
-
     def get_available_quantity(self, obj):
         return obj.book.quantity
+
+
+
 
 class RetrieveCartitemSerializer(BaseCartitemSerializer):
     class Meta(BaseCartitemSerializer.Meta): ...
@@ -106,7 +113,7 @@ class RetrieveCartitemSerializer(BaseCartitemSerializer):
 
 
 class CreateCartitemSerializer(serializers.ModelSerializer):
-    product_id = serializers.PrimaryKeyRelatedField(queryset=BookModel.objects.all(), write_only=True)  # product_id
+    book = serializers.PrimaryKeyRelatedField(queryset=BookModel.objects.all(), write_only=True)  # product_id
     color = serializers.PrimaryKeyRelatedField(queryset=ColorModel.objects.all(), required=False, allow_null=True)
     size = serializers.PrimaryKeyRelatedField(queryset=SizeModel.objects.all(), required=False, allow_null=True)
     quantity = serializers.IntegerField(min_value=1, default=1)
@@ -115,7 +122,7 @@ class CreateCartitemSerializer(serializers.ModelSerializer):
         model = CartitemModel
         fields = [
             'id',
-            'product_id',
+            'book',
             'color',
             'size',
             'quantity',
@@ -123,10 +130,10 @@ class CreateCartitemSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
-        product_id = attrs.get('product_id')
+        book = attrs.get('book')
         quantity = attrs.get('quantity')
 
-        total_price = product_id.price * quantity
+        total_price = book.price * quantity
 
         attrs['total_price'] = total_price
         return attrs
