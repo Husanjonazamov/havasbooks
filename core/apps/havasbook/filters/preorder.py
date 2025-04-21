@@ -11,3 +11,4 @@ class PreorderFilter(django_filters.FilterSet):
     class Meta:
         model = PreorderModel
         fields = ['status', 'user_name']
+ 
