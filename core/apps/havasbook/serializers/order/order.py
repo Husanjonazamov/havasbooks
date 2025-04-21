@@ -58,7 +58,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderModel
-        fields = ['user', 'phone', 'location', 'delivery_method', 'payment_method', 'total_amount', 'status', 'comment', 'order_item']
+        fields = ['phone', 'location', 'delivery_method', 'payment_method', 'total_amount', 'status', 'comment', 'order_item']
 
     def create(self, validated_data):
         order_item_data = validated_data.pop('order_item', None)
@@ -66,8 +66,10 @@ class CreateOrderSerializer(serializers.ModelSerializer):
 
         total_price = 0
 
+        user = self.context['request'].user
+
         # Yangi order yaratish
-        order = OrderModel.objects.create(**validated_data)
+        order = OrderModel.objects.create(user=user, **validated_data)
 
         # Delivery methodni olish va saqlash
         try:
