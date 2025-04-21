@@ -5,4 +5,6 @@ from ..models import DeliveryModel
 
 @register(DeliveryModel)
 class DeliveryTranslation(TranslationOptions):
-    fields = []
+    fields = [
+        'title'
+    ]
