@@ -56,6 +56,7 @@ class ListCartitemSerializer(serializers.ModelSerializer):
     price = serializers.DecimalField(source='book.price', max_digits=10, decimal_places=2)
     discounted_total_price = serializers.SerializerMethodField()
     discount_percent = serializers.SerializerMethodField()
+    available_quantity = serializers.SerializerMethodField()
 
     class Meta:
         model = CartitemModel
@@ -70,6 +71,7 @@ class ListCartitemSerializer(serializers.ModelSerializer):
             'discounted_total_price',
             'quantity',
             'discount_percent',
+            'available_quantity'
         ]
 
 
@@ -93,6 +95,9 @@ class ListCartitemSerializer(serializers.ModelSerializer):
     def get_discount_percent(self, obj):
         return getattr(obj.book, 'discount_percent', 0)
 
+
+    def get_available_quantity(self, obj):
+        return obj.book.quantity
 
 class RetrieveCartitemSerializer(BaseCartitemSerializer):
     class Meta(BaseCartitemSerializer.Meta): ...
