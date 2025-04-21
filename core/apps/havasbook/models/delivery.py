@@ -4,10 +4,10 @@ from django_core.models import AbstractBaseModel
 
 
 class DeliveryModel(AbstractBaseModel):
-    name = models.CharField(_("name"), max_length=255)
+    title = models.CharField(_("Nomi"), max_length=255)
 
     def __str__(self):
-        return self.name
+        return self.title
 
     @classmethod
     def _create_fake(self):
