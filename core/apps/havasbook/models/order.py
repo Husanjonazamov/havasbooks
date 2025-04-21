@@ -36,10 +36,13 @@ class OrderModel(AbstractBaseModel):
         on_delete=models.CASCADE,
         related_name="orders",
     )
-    delivery_method = models.CharField(
-        max_length=255,
-        choices=DeliveryMethodChoice.choices
+    delivery_method = models.ForeignKey(
+        'havasbook.DeliveryModel',
+        on_delete=models.CASCADE,
+        related_name="orders",
+        null=True, blank=True
     )
+     
     payment_method = models.CharField(
         _("To'lov turi"),
         max_length=50,
