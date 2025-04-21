@@ -130,4 +130,18 @@ PAGES = [
             },
         ]
     },
+    {
+        "title": _("Yetkazib berish"),
+        "separator": True,  # Top border
+        "items": [
+            {
+                "title": _("Yetkazib berish Turi"),
+                "icon": "list_alt",  # Mos icon (list of items)
+                "link": reverse_lazy("admin:havasbook_deliverymodel_changelist"),
+                "permission": lambda request: user_has_group_or_permission(
+                    request.user, "view_group"
+                ),
+            },
+        ]
+    },
 ]
