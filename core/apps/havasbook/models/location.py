@@ -6,17 +6,17 @@ from geopy.geocoders import Nominatim
 
 
 class LocationModel(AbstractBaseModel):
-    name = models.CharField(_("name"), max_length=255, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="locations") 
-    latitude = models.FloatField(
+    title = models.CharField(_("name"), max_length=255, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="locations", blank=True, null=True) 
+    lat = models.FloatField(
         _("Kenglik"),
     )
-    longitude = models.FloatField(
+    long = models.FloatField(
         _("Uzunlik"),
     )
 
     def __str__(self):
-        return self.name
+        return self.title
     
     def get_address(self):
         geolocator = Nominatim(user_agent="myapp")
@@ -26,8 +26,8 @@ class LocationModel(AbstractBaseModel):
         return _("Address not found")
 
     def save(self, *args, **kwargs):
-        if not self.name:
-            self.name = self.get_address()
+        if not self.title:
+            self.title = self.get_address()
         super(LocationModel, self).save(*args, **kwargs)
 
     @classmethod

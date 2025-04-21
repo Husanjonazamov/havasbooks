@@ -3,7 +3,7 @@ from rest_framework import serializers
 from ...models import OrderModel, OrderitemModel, OrderStatus
 from core.apps.havasbook.serializers.order.orderITem import CreateOrderitemSerializer
 from core.apps.havasbook.models.book import BookModel
-from core.apps.havasbook.serializers.location import ListLocationSerializer
+from core.apps.havasbook.serializers.location import CreateLocationSerializer
 from core.apps.havasbook.serializers import ListBookSerializer
 from .send_order import send_order_to_telegram
 from core.apps.havasbook.models.location import LocationModel
@@ -53,73 +53,66 @@ class RetrieveOrderSerializer(BaseOrderSerializer):
 
 
 class CreateOrderSerializer(serializers.ModelSerializer):
+    location = CreateLocationSerializer()
     order_item = CreateOrderitemSerializer(many=True)
-    delivery_method = serializers.PrimaryKeyRelatedField(queryset=DeliveryModel.objects.all())  # delivery methodni id orqali olish
+    delivery_method = serializers.PrimaryKeyRelatedField(queryset=DeliveryModel.objects.all())
+    reciever = serializers.DictField(write_only=True)
 
     class Meta:
         model = OrderModel
-        fields = ['phone', 'location', 'delivery_method', 'payment_method', 'total_amount', 'status', 'comment', 'order_item']
+        fields = [
+            'location',
+            'delivery_method',
+            'reciever',
+            'payment_method',
+            'comment',
+            'order_item'
+        ]
 
     def create(self, validated_data):
-        order_item_data = validated_data.pop('order_item', None)
-        delivery_method_data = validated_data.pop('delivery_method', None)
-
-        total_price = 0
+        location_data = validated_data.pop('location')
+        order_items_data = validated_data.pop('order_item')
+        reciever_data = validated_data.pop('reciever')
 
         user = self.context['request'].user
 
-        # Yangi order yaratish
-        order = OrderModel.objects.create(user=user, **validated_data)
+        location = LocationModel.objects.create(**location_data)
 
-        # Delivery methodni olish va saqlash
-        try:
-            delivery_method_instance = DeliveryModel.objects.get(id=delivery_method_data.id if hasattr(delivery_method_data, 'id') else delivery_method_data)
-            order.delivery_method = delivery_method_instance
-        except DeliveryModel.DoesNotExist:
-            raise serializers.ValidationError(f"Delivery method ID {delivery_method_data} mavjud emas.")
+        order = OrderModel.objects.create(
+            user=user,
+            location=location,
+            delivery_method=validated_data['delivery_method'],
+            payment_method=validated_data.get('payment_method'),
+            comment=validated_data.get('comment'),
+            reciever_name=reciever_data['name'],
+            reciever_phone=reciever_data['phone'],
+        )
 
-        # Order itemlarni yaratish
-        for item_data in order_item_data:
-            book = item_data['book']
-            quantity = item_data['quantity']
-
-            book_id = book.id if isinstance(book, BookModel) else book
-
-            try:
-                book_instance = BookModel.objects.get(id=book_id)
-            except BookModel.DoesNotExist:
-                raise serializers.ValidationError(f"Kitob ID {book_id} mavjud emas.")
-
-            price = book_instance.price
-            item_total = price * quantity
-            total_price += item_total
-
-            # Order itemni saqlash
+        total_price = 0
+        for item in order_items_data:
+            book_id = item['book'] if isinstance(item['book'], int) else item['book'].id
+            book = BookModel.objects.get(id=book_id)
+            price = book.price
+            quantity = item['quantity']
             OrderitemModel.objects.create(
                 order=order,
-                book=book_instance,
+                book=book,
                 quantity=quantity,
-                price=price 
+                price=price
             )
+            total_price += price * quantity
 
         order.total_amount = total_price
         order.save()
 
-        location_id = validated_data.get('location')
-        try:
-            location = LocationModel.objects.get(id=location_id.id if hasattr(location_id, 'id') else location_id)
-            send_order_to_telegram(
-                order=order,
-                location_name=location.name,
-                latitude=location.latitude,
-                longitude=location.longitude
-            )
-        except LocationModel.DoesNotExist:
-            print("Location topilmadi, Telegramga yuborilmadi.")
+        send_order_to_telegram(
+            order=order,
+            location_name=location.title,
+            latitude=location.lat,
+            longitude=location.long
+        )
 
         return order
-
-
 
 
 

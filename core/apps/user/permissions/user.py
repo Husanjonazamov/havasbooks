@@ -1,5 +1,5 @@
 from rest_framework import permissions
-
+from core.apps.accounts.models import User
 
 
 class UserPermission(permissions.BasePermission):
@@ -14,7 +14,7 @@ class UserPermission(permissions.BasePermission):
         if pk is None:
             return False
         try:
-            user = BotUserModel.objects.get(pk=pk)
+            user = User.objects.get(pk=pk)
         except BotUserModel.DoesNotExist:
             request.bot_user = pk  
             return True
