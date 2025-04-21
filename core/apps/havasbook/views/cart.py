@@ -20,6 +20,8 @@ from ..serializers.cart import (
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+
+from rest_framework.exceptions import ValidationError
 from typing import Any
 
 class CustomBaseViewSetMixin(object):
@@ -125,6 +127,14 @@ class CartitemView(BaseViewSetMixin, ReadOnlyModelViewSet):
             
         quantity = request.data.get("quantity")
         cart_item = get_object_or_404(CartitemModel, pk=pk, cart__user=request.user) 
+
+        book = cart_item.book
+
+        if quantity > book.quantity:
+            raise ValidationError(
+               f"Maxsulot miqdori ombordagi mavjud miqdordan ortiq bo'lishi mumkin emas."
+            )
+
         
         new_total_price = cart_item.book.price * quantity  
         old_total_price = cart_item.total_price  

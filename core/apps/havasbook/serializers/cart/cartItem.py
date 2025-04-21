@@ -48,7 +48,6 @@ class BaseCartitemSerializer(serializers.ModelSerializer):
 
 
 
-
 class ListCartitemSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source='book.name')
     color = serializers.CharField(source='color.name', default=None)
