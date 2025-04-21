@@ -9,20 +9,23 @@ from core.apps.accounts.models.user import User
 from ..serializers.user import CreateUserSerializer, ListUserSerializer, RetrieveUserSerializer
 from ..permissions import UserPermission  # siz yozgan permission
 
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 
 
-@extend_schema(tags=["user"])
+
 class UserView(BaseViewSetMixin, ModelViewSet):
     queryset = User.objects.all()
     serializer_class = ListUserSerializer
-    permission_classes = [UserPermission]  
+    permission_classes = [UserPermission]
     action_permission_classes = {}
 
     action_serializer_class = {
         "list": ListUserSerializer,
         "retrieve": RetrieveUserSerializer,
         "create": CreateUserSerializer,
-        "partial_update": CreateUserSerializer
+        "partial_update": CreateUserSerializer,
     }
 
-
+   

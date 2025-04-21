@@ -22,5 +22,3 @@ class User(auth_models.AbstractUser):
     USERNAME_FIELD = "phone"
     objects = UserManager()
 
-    def __str__(self):
-        return self.phone

@@ -24,10 +24,18 @@ class RetrieveUserSerializer(BaseUserSerializer):
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
-    class Meta(BaseUserSerializer.Meta):
-        fields = [
-            "id",
-            "first_name",
-            "last_name",
-            "user_id",
-        ]
+    class Meta:
+        model = User  # User modelini ishlatish
+        fields = ["id", "first_name", "last_name", "user_id"]
+
+
+    def validate_user_id(self, value):
+        if User.objects.filter(user_id=value).exists():
+            raise ValidationError("User with this user_id already exists.")
+        return value
+
+    def create(self, validated_data):
+        user_id = self.context["request"].user_id  
+        validated_data["user_id"] = user_id  
+
+        return super().create(validated_data)

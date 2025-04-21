@@ -11,15 +11,18 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         jwt_type = options.get("type", "user")
+
         if jwt_type == "user":
             payload = {
                 "exp": datetime.now() + timedelta(minutes=10),
-                "tg_id": 1,
+                "user_id": 5324534653463,  
             }
         else:
             payload = {
                 "exp": datetime.now() + timedelta(minutes=10),
-                "bot_id": 1,
+                "user_id": 4432432,
             }
+
         token = jwt.encode(payload, env.str("DJANGO_SECRET_KEY"), "HS256")
+        
         print("%s: %s" % (jwt_type, token))
