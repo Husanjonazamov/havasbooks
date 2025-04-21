@@ -9,7 +9,6 @@ from core.apps.havasbook.models import ColorModel, SizeModel
 
 
 
-
 class BasePreorderSerializer(serializers.ModelSerializer):
     book = serializers.SerializerMethodField()
 
