@@ -54,7 +54,8 @@ class ListCartSerializer(serializers.ModelSerializer):
     def get_products(self, obj):
         from core.apps.havasbook.serializers.cart import ListCartitemSerializer
         items = obj.cart_items.all()  
-        return ListCartitemSerializer(items, many=True).data
+        request = self.context.get('request')
+        return ListCartitemSerializer(items, many=True, context={'request': request}).data
 
     def get_total_quantity(self, obj):
         return sum([item.quantity for item in obj.cart_items.all()])

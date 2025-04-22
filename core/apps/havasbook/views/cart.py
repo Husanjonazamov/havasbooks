@@ -80,6 +80,9 @@ class CartView(CustomBaseViewSetMixin, ModelViewSet):
         cart = queryset.first()
         serializer = self.get_serializer(cart)
         return Response(serializer.data)
+    
+    def get_serializer_context(self):
+            return {'request': self.request}
 
     
 
@@ -95,6 +98,9 @@ class CartitemView(BaseViewSetMixin, ReadOnlyModelViewSet):
         "retrieve": RetrieveCartitemSerializer,
         "create": CreateCartitemSerializer,
     }
+    
+    def get_serializer_context(self):
+        return {'request': self.request}
     
     def destroy(self, request, pk=None):
         self.permission_classes = [IsAuthenticated]
