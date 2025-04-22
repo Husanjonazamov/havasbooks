@@ -4,9 +4,11 @@ from decimal import Decimal
 
 
 from django.conf import settings
+from core.apps.havasbook.models.cart import CartitemModel, CartModel
 
 
 class BaseBookSerializer(serializers.ModelSerializer):
+    cart_id = serializers.SerializerMethodField()
     color = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
 
@@ -14,6 +16,7 @@ class BaseBookSerializer(serializers.ModelSerializer):
         model = BookModel
         fields = [
             'id',
+            'cart_id',
             'category',
             'name',
             'image',
@@ -35,6 +38,29 @@ class BaseBookSerializer(serializers.ModelSerializer):
     #     from core.apps.havasbook.serializers.category import ListCategorySerializer
         
     #     return ListCategorySerializer(obj.category).data
+    
+    
+    
+    def get_cart_id(self, obj):
+        request = self.context.get('request')
+        
+        if request and request.user.is_authenticated:
+            cart = CartModel.objects.filter(user=request.user).first()
+            if cart:
+                cart_item = CartitemModel.objects.filter(cart=cart, book=obj).first()
+                
+                print("Cart Item:", cart_item)
+                
+                if cart_item:
+                    return cart.id  
+                else:
+                    print("Cart Item topilmadi!")
+            else:
+                print("Cart topilmadi!")
+        else:
+            print("Foydalanuvchi login bo'lmagan!")
+        
+        return None  
     
     
     def get_color(self, obj):
@@ -64,12 +90,14 @@ class ListBookSerializer(BaseBookSerializer):
     class Meta(BaseBookSerializer.Meta): ...
 
 
+
 class RetrieveBookSerializer(BaseBookSerializer):
-    # images = serializers.SerializerMethodField()
-    
+    cart_id = serializers.SerializerMethodField()
+
     class Meta(BaseBookSerializer.Meta): 
         fields = [
             'id',
+            'cart_id',
             'category',
             'name',
             'description',
@@ -89,6 +117,28 @@ class RetrieveBookSerializer(BaseBookSerializer):
             'created_at',
         ]
         
+    def get_cart_id(self, obj):
+        request = self.context.get('request')
+        
+        if request and request.user.is_authenticated:
+            cart = CartModel.objects.filter(user=request.user).first()
+            if cart:
+                cart_item = CartitemModel.objects.filter(cart=cart, book=obj).first()
+                
+                print("Cart Item:", cart_item)
+                
+                if cart_item:
+                    return cart.id  
+                else:
+                    print("Cart Item topilmadi!")
+            else:
+                print("Cart topilmadi!")
+        else:
+            print("Foydalanuvchi login bo'lmagan!")
+        
+        return None  
+
+    
     # def get_images(self, obj):
     #     from core.apps.havasbook.serializers.book import ListBookimageSerializer
     #     image_instance = obj.images.first()
