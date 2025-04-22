@@ -6,10 +6,11 @@ from core.apps.havasbook.serializers.order.generate_link import send_payment_opt
 
 bot = telebot.TeleBot("7178118588:AAHtJ8mKY-ChU0yyxiyWhcVogURQwki61_Y")
 
+
 def send_order_to_telegram(order, location_name, latitude, longitude):
     send_payment_options(order, bot)
 
-    chat_id = "-1002264446732"
+    chat_id ="-1002264446732"
     yandex_url = f"https://yandex.com/maps/?pt={longitude},{latitude}&z=14&l=map"
 
     markup = types.InlineKeyboardMarkup()
