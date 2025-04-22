@@ -8,7 +8,6 @@ from core.apps.havasbook.models.cart import CartitemModel, CartModel
 
 
 class BaseBookSerializer(serializers.ModelSerializer):
-    cart_id = serializers.SerializerMethodField()
     color = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
 
@@ -16,7 +15,6 @@ class BaseBookSerializer(serializers.ModelSerializer):
         model = BookModel
         fields = [
             'id',
-            'cart_id',
             'category',
             'name',
             'image',
@@ -40,27 +38,6 @@ class BaseBookSerializer(serializers.ModelSerializer):
     #     return ListCategorySerializer(obj.category).data
     
     
-    
-    def get_cart_id(self, obj):
-        request = self.context.get('request')
-        
-        if request and request.user.is_authenticated:
-            cart = CartModel.objects.filter(user=request.user).first()
-            if cart:
-                cart_item = CartitemModel.objects.filter(cart=cart, book=obj).first()
-                
-                print("Cart Item:", cart_item)
-                
-                if cart_item:
-                    return cart.id  
-                else:
-                    print("Cart Item topilmadi!")
-            else:
-                print("Cart topilmadi!")
-        else:
-            print("Foydalanuvchi login bo'lmagan!")
-        
-        return None  
     
     
     def get_color(self, obj):
