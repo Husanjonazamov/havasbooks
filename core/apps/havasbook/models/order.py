@@ -51,7 +51,7 @@ class OrderModel(AbstractBaseModel):
         choices=PaymentMethodChoice.choices,
         default='click'
     )
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00) 
     status = models.CharField(
         _("Status"),
         max_length=50,

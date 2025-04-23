@@ -8,7 +8,7 @@ from core.apps.havasbook.serializers import ListBookSerializer
 from .send_order import send_order_to_telegram
 from core.apps.havasbook.models.location import LocationModel
 from core.apps.havasbook.models.delivery import DeliveryModel
-from core.apps.havasbook.serializers.order.orderITem import OrderItemSerializers
+from core.apps.havasbook.serializers.order.orderITem import OrderItemSerializers, ListOrderItemSerializers
 from core.apps.havasbook.models.cart import CartitemModel, CartModel
 
 class BaseOrderSerializer(serializers.ModelSerializer):
@@ -22,28 +22,38 @@ class BaseOrderSerializer(serializers.ModelSerializer):
             'location',
             'delivery_method',
             'payment_method',
-            'total_amount',
+            'total_price',
             'status',
             'comment',
         ]
 
 class ListOrderSerializer(BaseOrderSerializer):
-    order_item = OrderItemSerializers(many=True)  
+    order_item = ListOrderItemSerializers   (many=True)  
+    location = serializers.SerializerMethodField()
+    delivery_price = serializers.SerializerMethodField()
 
     class Meta(BaseOrderSerializer.Meta): 
         fields = [
             'id',
-            'user',
             "reciever_phone",
+            "reciever_name",
             'location',
+            'delivery_price',
             'delivery_method',
             'payment_method',
-            'total_amount',
+            'total_price',
             'status',
             'comment',
             'order_item' 
         ]
-
+        
+        
+    def get_delivery_price(self, obj):
+        return obj.delivery_method.price
+        
+    def get_location(self, obj):
+        return obj.location.title if obj.location else None
+        
 
 
 

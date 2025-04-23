@@ -54,7 +54,6 @@ class PreorderModel(AbstractBaseModel):
 
 
 
-
     def __str__(self):
         return self.book.name
 

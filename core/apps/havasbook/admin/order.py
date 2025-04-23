@@ -9,7 +9,7 @@ class OrderAdmin(ModelAdmin):
     list_display = (
         "id",
         'payment_method',
-        'total_amount',
+        'total_price',
         'status'
     )
 

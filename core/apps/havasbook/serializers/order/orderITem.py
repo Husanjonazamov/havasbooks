@@ -58,3 +58,31 @@ class OrderItemSerializers(serializers.ModelSerializer):
     def get_book(self, obj):
         from core.apps.havasbook.serializers.book.book import ListBookSerializer
         return ListBookSerializer(obj.book).data
+    
+    
+class ListOrderItemSerializers(serializers.ModelSerializer):
+    book = serializers.SerializerMethodField()
+    class Meta:
+        model = OrderitemModel
+        fields = [
+            'id',
+            'book',
+            'quantity',
+            'price'
+        ]
+
+
+    def get_book(self, obj):
+        request = self.context.get('request')  
+        book = obj.book
+        image_url = book.image.url if book.image else None
+        if image_url and request:
+            image_url = request.build_absolute_uri(image_url)  
+
+        return {
+            "name": book.name,
+            "price": book.price,
+            "image": image_url,
+            "color": book.color.first().title if book.color.exists() else None,
+            "size": book.size.first().title if book.size.exists() else None
+        }

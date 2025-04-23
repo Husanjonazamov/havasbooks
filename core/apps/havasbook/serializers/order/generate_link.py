@@ -8,7 +8,7 @@ def send_payment_options(order, bot):
     markup.add(types.InlineKeyboardButton("Buyurtmani ko‘rish", url=order_url))
 
     if order.payment_method == "click":
-        payment_url = f"https://click.uz/pay/{order.user.user_id}?amount={order.total_amount}"
+        payment_url = f"https://click.uz/pay/{order.user.user_id}?amount={order.total_price}"
         markup.add(types.InlineKeyboardButton("Click orqali to'lov", url=payment_url))
         bot.send_message(
             chat_id=order.user.user_id,
@@ -17,7 +17,7 @@ def send_payment_options(order, bot):
         )
     
     elif order.payment_method == "payme":
-        payment_url = f"https://payme.uz/pay/{order.user.user_id}?amount={order.total_amount}"
+        payment_url = f"https://payme.uz/pay/{order.user.user_id}?amount={order.total_price}"
         markup.add(types.InlineKeyboardButton("Payme orqali to'lov", url=payment_url))
         bot.send_message(
             chat_id=order.user.user_id,
@@ -26,7 +26,7 @@ def send_payment_options(order, bot):
         )
 
     elif order.payment_method == "paynet":
-        payment_url = f"https://paynet.uz/pay/{order.user.user_id}?amount={order.total_amount}"
+        payment_url = f"https://paynet.uz/pay/{order.user.user_id}?amount={order.total_price}"
         markup.add(types.InlineKeyboardButton("Paynet orqali to'lov", url=payment_url))
         bot.send_message(
             chat_id=order.user.user_id,
@@ -36,7 +36,7 @@ def send_payment_options(order, bot):
 
     else:
         # Uzum to'lov tizimi
-        payment_url = f"https://uzum.uz/pay/{order.user.user_id}?amount={order.total_amount}"
+        payment_url = f"https://uzum.uz/pay/{order.user.user_id}?amount={order.total_price}"
         markup.add(types.InlineKeyboardButton("Uzum orqali to'lov", url=payment_url))
         bot.send_message(
             chat_id=order.user.user_id,

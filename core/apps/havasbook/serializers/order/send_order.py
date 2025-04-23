@@ -20,7 +20,7 @@ def send_order_to_telegram(order, location_name, latitude, longitude):
         f"👤 <b>Buyurtmachi:</b> {order.reciever_name}\n"
         f"📞 <b>Telefon:</b> {order.reciever_phone}\n"
         f"📍 <b>Joylashuv:</b> {location_name}\n"
-        f"💰 <b>Jami summa:</b> {int(order.total_amount):,} so'm\n"
+        f"💰 <b>Jami summa:</b> {int(order.total_price):,} so'm\n"
         f"🗒️ <b>Izoh:</b> {order.comment or 'Yo‘q'}\n"
         f"💳 <b>To'lov turi:</b> {order.payment_method.capitalize()}\n\n"
         f"📚 <b>Buyurtmadagi kitoblar:</b>\n"
