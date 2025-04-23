@@ -9,6 +9,7 @@ from .send_order import send_order_to_telegram
 from core.apps.havasbook.models.location import LocationModel
 from core.apps.havasbook.models.delivery import DeliveryModel
 from core.apps.havasbook.serializers.order.orderITem import OrderItemSerializers
+from core.apps.havasbook.models.cart import CartitemModel, CartModel
 
 class BaseOrderSerializer(serializers.ModelSerializer):
 
@@ -17,7 +18,7 @@ class BaseOrderSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'user',
-            "phone",
+            "reciever_phone",
             'location',
             'delivery_method',
             'payment_method',
@@ -33,7 +34,7 @@ class ListOrderSerializer(BaseOrderSerializer):
         fields = [
             'id',
             'user',
-            "phone",
+            "reciever_phone",
             'location',
             'delivery_method',
             'payment_method',
@@ -104,6 +105,13 @@ class CreateOrderSerializer(serializers.ModelSerializer):
 
         order.total_amount = total_price
         order.save()
+
+        cart = CartModel.objects.filter(user=user).first()
+        print(f"----{cart}----")
+        if cart:
+            print(f"++++++{cart}+++++")
+            CartitemModel.objects.filter(cart=cart).delete()
+
 
         send_order_to_telegram(
             order=order,

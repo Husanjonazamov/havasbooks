@@ -41,7 +41,7 @@ class OrderView(BaseViewSetMixin, ModelViewSet):
         "retrieve": RetrieveOrderSerializer,
         "create": CreateOrderSerializer,
     }
-    @action(detail=False, methods=["get"], url_path="me", permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=["get"], url_path="me", permission_classes=[AllowAny, UserPermission])
     def me(self, request):
         user = request.user
         queryset = self.filter_queryset(self.get_queryset().filter(user=user))
@@ -53,8 +53,9 @@ class OrderView(BaseViewSetMixin, ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response({"status": True, "data": serializer.data})
+    
 
-    @action(detail=True, methods=["patch"], url_path="cancel", permission_classes=[IsAuthenticated])
+    @action(detail=True, methods=["patch"], url_path="cancel", permission_classes=[AllowAny, UserPermission])
     def cancel_order(self, request, pk=None):
         try:
             order = self.get_object()

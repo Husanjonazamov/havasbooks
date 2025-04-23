@@ -31,7 +31,7 @@ class UserPermission(permissions.BasePermission):
         
         user = User.objects.filter(user_id=user_id)
         if not user.exists():    
-            user = User.objects.create_user(f"U{user_id}", f"{user_id}@gmail.com", f"U{user_id}", user_id=user_id)
+            user = User.objects.create_user(f"U{user_id}", f"{user_id}@gmail.com",  user_id=user_id)
         else:
             user = user.first()
         request.user = user

@@ -15,12 +15,12 @@ class Command(BaseCommand):
         if jwt_type == "user":
             payload = {
                 "exp": datetime.now() + timedelta(minutes=10),
-                "user_id": 43243213432,  
+                "user_id": 5765144405,  
             }
         else:
             payload = {
                 "exp": datetime.now() + timedelta(minutes=10),
-                "user_id": 43243213432,
+                "user_id": 5765144405,
             }
 
         token = jwt.encode(payload, env.str("DJANGO_SECRET_KEY"), "HS256")
