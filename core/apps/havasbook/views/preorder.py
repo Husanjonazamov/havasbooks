@@ -9,6 +9,7 @@ from django_core.paginations import CustomPagination
 from rest_framework.decorators import action
 from core.apps.havasbook.filters.preorder import PreorderFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from core.apps.user.permissions.user import UserPermission
 
 
 
@@ -16,7 +17,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 class PreorderView(BaseViewSetMixin, ModelViewSet):
     queryset = PreorderModel.objects.all()
     serializer_class = ListPreorderSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny, UserPermission]
     filterset_class = PreorderFilter
     pagination_class = CustomPagination
 
@@ -30,7 +31,7 @@ class PreorderView(BaseViewSetMixin, ModelViewSet):
     }
 
 
-    @action(detail=False, methods=["get"], url_path="me", permission_classes=[IsAuthenticated])
+    @action(detail=False, methods=["get"], url_path="me", permission_classes=[AllowAny, UserPermission])
     def me(self, request):
         user = request.user
         queryset = self.filter_queryset(

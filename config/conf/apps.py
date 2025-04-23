@@ -16,6 +16,7 @@ APPS = [
     "core.apps.accounts.apps.AccountsConfig",
     'core.apps.havasbook',
     'core.apps.user',
+    
 
 ]
 
