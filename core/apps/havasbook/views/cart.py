@@ -65,7 +65,7 @@ class CustomBaseViewSetMixin(object):
 class CartView(CustomBaseViewSetMixin, ModelViewSet):
     queryset = CartModel.objects.all()
     serializer_class = ListCartSerializer
-    permission_classes = [UserPermission]
+    permission_classes = [AllowAny, UserPermission]
 
     action_permission_classes = {}
     action_serializer_class = {
@@ -92,7 +92,7 @@ class CartView(CustomBaseViewSetMixin, ModelViewSet):
 class CartitemView(BaseViewSetMixin, ReadOnlyModelViewSet):
     queryset = CartitemModel.objects.all()
     serializer_class = ListCartitemSerializer
-    permission_classes = [UserPermission]
+    permission_classes = [AllowAny, UserPermission]
 
     action_permission_classes = {}
     action_serializer_class = {
@@ -125,7 +125,7 @@ class CartitemView(BaseViewSetMixin, ReadOnlyModelViewSet):
 
 
     def patch(self, request, pk=None):
-        self.permission_classes = [IsAuthenticated]
+        self.permission_classes = [AllowAny, UserPermission]
     
         if not request.user.is_authenticated:
             return Response(
