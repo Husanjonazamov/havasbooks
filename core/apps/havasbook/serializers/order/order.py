@@ -78,11 +78,13 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
 
         location = LocationModel.objects.create(**location_data)
+        delivery_method = validated_data['delivery_method']
+        delivery_price = delivery_method.price
 
         order = OrderModel.objects.create(
             user=user,
             location=location,
-            delivery_method=validated_data['delivery_method'],
+            delivery_method=delivery_method,
             payment_method=validated_data.get('payment_method'),
             comment=validated_data.get('comment'),
             reciever_name=reciever_data['name'],
@@ -103,13 +105,12 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             )
             total_price += price * quantity
 
+        total_price += delivery_price
         order.total_amount = total_price
         order.save()
 
         cart = CartModel.objects.filter(user=user).first()
-        print(f"----{cart}----")
         if cart:
-            print(f"++++++{cart}+++++")
             CartitemModel.objects.filter(cart=cart).delete()
 
 
