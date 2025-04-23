@@ -26,13 +26,13 @@ class UserPermission(permissions.BasePermission):
 
         user_id = claim.get("user_id", None)
         print("USER_ID:", user_id)
-        if user_id is not None:
-            try:
-                user = User.objects.get(user_id=user_id)  
-                print(f"User found: {user.first_name} {user.last_name}")
-            except User.DoesNotExist:
-                request.user_id = user_id
-                return True
-        request.user_id = user_id
-
-        return True 
+        if user_id is None:
+            return False
+        
+        user = User.objects.filter(user_id=user_id)
+        if not user.exists():    
+            user = User.objects.create_user(f"U{user_id}", f"{user_id}@gmail.com", f"U{user_id}", user_id=user_id)
+        else:
+            user = user.first()
+        request.user = user
+        return True
