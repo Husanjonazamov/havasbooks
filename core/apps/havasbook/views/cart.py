@@ -23,6 +23,8 @@ from rest_framework.decorators import action
 
 from rest_framework.exceptions import ValidationError
 from typing import Any
+from core.apps.user.permissions.user import UserPermission
+
 
 class CustomBaseViewSetMixin(object):
     action_serializer_class = {}
@@ -63,7 +65,7 @@ class CustomBaseViewSetMixin(object):
 class CartView(CustomBaseViewSetMixin, ModelViewSet):
     queryset = CartModel.objects.all()
     serializer_class = ListCartSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [UserPermission]
 
     action_permission_classes = {}
     action_serializer_class = {
@@ -90,7 +92,7 @@ class CartView(CustomBaseViewSetMixin, ModelViewSet):
 class CartitemView(BaseViewSetMixin, ReadOnlyModelViewSet):
     queryset = CartitemModel.objects.all()
     serializer_class = ListCartitemSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [UserPermission]
 
     action_permission_classes = {}
     action_serializer_class = {
@@ -103,7 +105,7 @@ class CartitemView(BaseViewSetMixin, ReadOnlyModelViewSet):
         return {'request': self.request}
     
     def destroy(self, request, pk=None):
-        self.permission_classes = [IsAuthenticated]
+        self.permission_classes = [UserPermission]
         
         if not request.user.is_authenticated:
             return Response(

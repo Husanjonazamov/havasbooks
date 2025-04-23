@@ -44,47 +44,6 @@ from config.env import env
 from rest_framework import status
 
 
-class CreateUserFromTokenView(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request):
-        # Tokenni JSON bodydan olish
-        token = request.data.get('token')
-
-        if not token:
-            raise AuthenticationFailed('Token is missing from the request body.')
-
-        SECRET_KEY = env('DJANGO_SECRET_KEY')  # SECRET_KEYni environment'dan olish
-
-        try:
-            decoded_payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-
-            user_id = decoded_payload.get("user_id")
-
-            if user_id:
-                try:
-                    user = User.objects.get(id=user_id)
-                    return Response({"message": "User already exists."}, status=status.HTTP_400_BAD_REQUEST)
-                except ObjectDoesNotExist:
-                    user = User.objects.create(id=user_id, username=f"user_{user_id}")
-                    return Response({
-                        "user_id": user.id,
-                        "username": user.username,
-                        "message": "User successfully created from token."
-                    }, status=status.HTTP_201_CREATED)
-
-            else:
-                return Response({"error": "User ID not found in token."}, status=status.HTTP_400_BAD_REQUEST)
-
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Token has expired.')
-        
-        except jwt.InvalidTokenError:
-            raise AuthenticationFailed('Invalid token.')
-
-
-
-
 
 @extend_schema(tags=["register"])
 class RegisterView(BaseViewSetMixin, GenericViewSet, UserService):

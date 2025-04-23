@@ -20,6 +20,7 @@ from core.apps.havasbook.filters.order import OrderFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from ..serializers.order.cencel_order import send_cancel_order
 from rest_framework import status
+from core.apps.user.permissions.user import UserPermission
 
 
 
@@ -28,7 +29,7 @@ from rest_framework import status
 class OrderView(BaseViewSetMixin, ModelViewSet):
     queryset = OrderModel.objects.all()
     serializer_class = ListOrderSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny, UserPermission]
     filterset_class = OrderFilter
     pagination_class = CustomPagination
 
@@ -85,7 +86,7 @@ class OrderView(BaseViewSetMixin, ModelViewSet):
 class OrderitemView(BaseViewSetMixin, ModelViewSet):
     queryset = OrderitemModel.objects.all()
     serializer_class = ListOrderitemSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny, UserPermission]
 
     action_permission_classes = {}
     action_serializer_class = {

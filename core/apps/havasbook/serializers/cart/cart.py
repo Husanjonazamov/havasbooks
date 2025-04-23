@@ -51,7 +51,7 @@ class ListCartSerializer(serializers.ModelSerializer):
             'products'
         ]
 
-    def get_products(self, obj):
+    def get_products(self, obj) -> list:
         from core.apps.havasbook.serializers.cart import ListCartitemSerializer
         items = obj.cart_items.all()  
         request = self.context.get('request')

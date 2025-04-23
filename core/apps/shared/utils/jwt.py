@@ -17,19 +17,15 @@ def get_claim(token: str) -> Optional[Dict]:
 
 def get_pk(request) -> Optional[int]:
     token = request.headers.get("token", None)
-    print("TOKEN:", token)  # Tokenni konsolga chiqarish (debug uchun)
+    print("TOKEN:", token)
 
     if token is None:
-        return None  # Agar token bo'lmasa, None qaytarish
+        return None  
 
-    # Tokenni dekodlash va claimni olish
     claim = get_claim(token)
-    print("CLAIM:", claim)  # Claimni konsolga chiqarish (debug uchun)
 
     if claim is None:
-        return None  # Agar claim mavjud bo'lmasa, None qaytarish
+        return None  
 
-    # Yangi: faqat user_id olish
     user_id = claim.get("user_id")
-    print("USER_ID:", user_id)  # User IDni konsolga chiqarish (debug uchun)
-    return user_id  # User ID qaytarish
+    return user_id  

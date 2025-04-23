@@ -18,7 +18,7 @@ from rest_framework.exceptions import ValidationError
 class UserView(BaseViewSetMixin, ModelViewSet):
     queryset = User.objects.all()
     serializer_class = ListUserSerializer
-    permission_classes = [UserPermission]
+    permission_classes = [AllowAny, UserPermission]
     action_permission_classes = {}
 
     action_serializer_class = {

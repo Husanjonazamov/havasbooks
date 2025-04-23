@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from core.apps.accounts.models.user import User
-
+from rest_framework.validators import ValidationError
 
 class BaseUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,7 +25,7 @@ class RetrieveUserSerializer(BaseUserSerializer):
 
 class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User  # User modelini ishlatish
+        model = User  
         fields = ["id", "first_name", "last_name", "user_id"]
 
 
