@@ -1,9 +1,10 @@
 from rest_framework import serializers
 
 from ...models import LocationModel
+from django_core.serializers import AbstractTranslatedSerializer
 
 
-class BaseLocationSerializer(serializers.ModelSerializer):
+class BaseLocationSerializer(AbstractTranslatedSerializer):
     class Meta:
         model = LocationModel
         fields = [

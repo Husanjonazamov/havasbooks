@@ -16,7 +16,7 @@ class LocationModel(AbstractBaseModel):
     )
 
     def __str__(self):
-        return self.title
+        return self.title or "location"
     
     def get_address(self):
         geolocator = Nominatim(user_agent="myapp")
