@@ -1,11 +1,14 @@
 from rest_framework import serializers
 
 from ...models import DeliveryModel
+from django_core.serializers import AbstractTranslatedSerializer
 
-
-class BaseDeliverySerializer(serializers.ModelSerializer):
+class BaseDeliverySerializer(AbstractTranslatedSerializer):
     class Meta:
         model = DeliveryModel
+        translated_fields = [
+            'title'
+        ]
         fields = [
             'id',
             'title'
