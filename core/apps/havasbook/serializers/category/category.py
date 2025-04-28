@@ -2,10 +2,14 @@ from rest_framework import serializers
 
 from ...models import CategoryModel
 from core.apps.havasbook.serializers.book.book import BaseBookSerializer
+from django_core.serializers import AbstractTranslatedSerializer
 
-class BaseCategorySerializer(serializers.ModelSerializer):
+class BaseCategorySerializer(AbstractTranslatedSerializer):
     class Meta:
         model = CategoryModel
+        translated_fields = [
+            'name'
+        ]
         fields = [
             'id',
             'name',

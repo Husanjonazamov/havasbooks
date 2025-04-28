@@ -3,7 +3,7 @@ from core.apps.havasbook.serializers.cart.cartItem import CreateCartitemSerializ
 from ...models import CartModel, CartitemModel
 from decimal import Decimal
 from django.db.models import Sum
-
+from django_core.serializers import AbstractTranslatedSerializer
 
 
 
