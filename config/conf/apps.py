@@ -16,9 +16,10 @@ APPS = [
     "core.apps.accounts.apps.AccountsConfig",
     'core.apps.havasbook',
     'core.apps.user',
-    
+    'core.apps.bot',
 
 ]
+
 
 if env.str("PROJECT_ENV") == "debug":
     APPS += [

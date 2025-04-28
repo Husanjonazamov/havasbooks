@@ -9,6 +9,8 @@ from config.env import env
 from django.utils.translation import gettext_lazy as _
 from rich.traceback import install
 
+
+
 install(show_locals=True)
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent.parent
 
@@ -19,6 +21,7 @@ ALLOWED_HOSTS: Union[List[str]] = ["*"]
 
 if env.bool("PROTOCOL_HTTPS", False):
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 
 DATABASES = {
     "default": {
@@ -31,9 +34,11 @@ DATABASES = {
     }
 }
 
+
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.BCryptPasswordHasher",
 ]
+
 
 INSTALLED_APPS = [
     "modeltranslation",
@@ -49,6 +54,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ] + APPS
+
 
 MODULES = [app for app in MODULES if isinstance(app, str)]
 
@@ -144,6 +150,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 STATIC_ROOT = os.path.join(BASE_DIR, "resources/staticfiles")
 VITE_APP_DIR = os.path.join(BASE_DIR, "resources/static/vite")
 
+
 CORS_ALLOW_HEADERS = (
     "accept",
     "authorization",
@@ -192,6 +199,7 @@ PARLER_LANGUAGES = {
         'hide_untranslated': False,   # the default; let .active_translations() return fallbacks too.
     }
 }
+
 
 
 JST_LANGUAGES = [

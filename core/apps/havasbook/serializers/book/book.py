@@ -2,17 +2,22 @@ from rest_framework import serializers
 from ...models import BookModel
 from decimal import Decimal
 
-
 from django.conf import settings
 from core.apps.havasbook.models.cart import CartitemModel, CartModel
+from django_core.serializers import AbstractTranslatedSerializer
 
 
-class BaseBookSerializer(serializers.ModelSerializer):
+
+class BaseBookSerializer(AbstractTranslatedSerializer):
     color = serializers.SerializerMethodField()
     size = serializers.SerializerMethodField()
 
     class Meta:
         model = BookModel
+        translated_fields = [
+            "name",
+            "description"
+        ]
         fields = [
             'id',
             'category',
