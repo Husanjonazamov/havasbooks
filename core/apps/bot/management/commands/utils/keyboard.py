@@ -4,6 +4,9 @@ from telebot.types import (
 
 
 
+CONTACT = "📞 Bog'lanish"
+
+
 def get_keyboard():
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
 
@@ -25,7 +28,7 @@ def get_keyboard():
     
     
     contact = KeyboardButton(
-        "📞 Bog'lanish"
+        CONTACT
     )
     
     keyboard.add(contact)
