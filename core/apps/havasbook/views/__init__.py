@@ -9,4 +9,3 @@ from .preorder import *  # noqa
 from .products import *  # noqa
 from .variants import *  # noqa
 
-from .organization import *  # noqa

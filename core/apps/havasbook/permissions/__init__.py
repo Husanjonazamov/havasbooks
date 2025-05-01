@@ -6,4 +6,3 @@ from .delivery import *  # noqa
 from .order import *  # noqa
 from .products import *  # noqa
 
-from .organization import *  # noqa
