@@ -75,13 +75,8 @@ class ListCartSerializer(serializers.ModelSerializer):
 
 
 
-
-
-
-
 class RetrieveCartSerializer(BaseCartSerializer):
     class Meta(BaseCartSerializer.Meta): ...
-
 
 
 
