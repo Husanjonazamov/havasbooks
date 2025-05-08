@@ -9,6 +9,7 @@ APPS = [
     "drf_spectacular",
     "rest_framework",
     "corsheaders",
+    "payme",
     "django_filters",
     "django_redis",
     "rest_framework_simplejwt",

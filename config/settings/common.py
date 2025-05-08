@@ -219,3 +219,9 @@ JST_LANGUAGES = [
 ]
 
 
+PAYME_ID = env("PAYME_ID")
+PAYME_KEY = env("PAYME_KEY")
+PAYME_ACCOUNT_FIELD = "id"
+PAYME_AMOUNT_FIELD = "total_price"
+PAYME_ACCOUNT_MODEL = "core.apps.havasbook.models..order.OrderModel"
+PAYME_ONE_TIME_PAYMENT = True
