@@ -5,7 +5,7 @@ from core.apps.havasbook.models.book import BookModel
 from core.apps.havasbook.serializers.book import BaseBookSerializer
 
 from core.apps.havasbook.models import ColorModel, SizeModel
-
+from .send_preorder import send_preorder_to_telegram
 
 
 
@@ -50,12 +50,12 @@ class BasePreorderSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         
         # Fields with the correct types as str
-        representation["created_at"] = str(instance.created_at)  # type: str
-        representation["user_name"] = str(instance.user_name)  # type: str
-        representation["phone"] = str(instance.phone)  # type: str
-        representation["count"] = str(instance.count)  # type: str
-        representation["status"] = str(instance.status)  # type: str
-        representation["total_price"] = str(instance.total_price)  # type: str
+        representation["created_at"] = str(instance.created_at)  
+        representation["user_name"] = str(instance.user_name)  
+        representation["phone"] = str(instance.phone)  
+        representation["count"] = str(instance.count)  
+        representation["status"] = str(instance.status)  
+        representation["total_price"] = str(instance.total_price) 
         
         return representation
 
@@ -106,4 +106,6 @@ class CreatePreorderSerializer(BasePreorderSerializer):
             total_price=total_price 
         )
 
+        send_preorder_to_telegram(preorder, self.context['request'])
+        
         return preorder

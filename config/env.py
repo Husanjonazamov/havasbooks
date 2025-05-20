@@ -23,6 +23,7 @@ env = environ.Env(
     NGROK_AUTHTOKEN=(str, "TOKEN"),
     BOT_TOKEN=(str, "TOKEN"),
     ADMIN_ID=(str, "TOKEN"),
+    CHANNEL_ID=(str, "TOKEN"),
     PAYME_ID=(str, "TOKEN"),
     PAYME_KEY=(str, "TOKEN"),
     OTP_MODULE="core.services.otp",
