@@ -61,7 +61,7 @@ class ListCartitemSerializer(serializers.ModelSerializer):
     discounted_total_price = serializers.SerializerMethodField()
     discount_percent = serializers.SerializerMethodField()
     available_quantity = serializers.SerializerMethodField()
-    total_price = serializers.SerializerMethodField()  # ✅ total_price ham qo'shamiz
+    total_price = serializers.SerializerMethodField()  
 
     class Meta:
         model = CartitemModel

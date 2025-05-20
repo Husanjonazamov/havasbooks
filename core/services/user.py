@@ -16,7 +16,6 @@ class UserService:
         }
 
     def create_user(self, user_id, first_name, last_name, password):
-        # Telefonni olishni olib tashlash va user_id bilan yaratish
         get_user_model().objects.update_or_create(
             user_id=user_id,
             defaults={

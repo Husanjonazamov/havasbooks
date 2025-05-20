@@ -18,6 +18,8 @@ class User(auth_models.AbstractUser):
         default=RoleChoice.USER,
     )
     
+    def __str__(self):
+        return self.first_name
 
     USERNAME_FIELD = "phone"
     objects = UserManager()

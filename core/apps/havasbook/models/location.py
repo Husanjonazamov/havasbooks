@@ -1,13 +1,12 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_core.models import AbstractBaseModel
-from core.apps.accounts.models.user import User
 from geopy.geocoders import Nominatim
 
 
 class LocationModel(AbstractBaseModel):
     title = models.CharField(_("name"), max_length=255, null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="locations", blank=True, null=True) 
+    user = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name="locations", blank=True, null=True) 
     lat = models.FloatField(
         _("Kenglik"),
     )
@@ -16,7 +15,7 @@ class LocationModel(AbstractBaseModel):
     )
 
     def __str__(self):
-        return self.title or "location"
+        return self.title or "tile" 
     
     def get_address(self):
         geolocator = Nominatim(user_agent="myapp")

@@ -8,6 +8,7 @@ from ..models import OrderitemModel, OrderModel
 class OrderAdmin(ModelAdmin):
     list_display = (
         "id",
+        '__str__',
         'payment_method',
         'total_price',
         'status'

@@ -12,7 +12,6 @@ from core.apps.havasbook.serializers.order.orderITem import OrderItemSerializers
 from core.apps.havasbook.models.cart import CartitemModel, CartModel
 
 class BaseOrderSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = OrderModel
         fields = [

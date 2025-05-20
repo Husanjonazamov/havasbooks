@@ -89,18 +89,12 @@ class CreatePreorderSerializer(BasePreorderSerializer):
     def create(self, validated_data):
         user = self.context['request'].user
 
-        if user.is_anonymous:
-            raise serializers.ValidationError("Foydalanuvchi autentifikatsiya qilinmagan.")
-
-        # Kitob narxini olish
         book = validated_data['book']
-        book_price = book.price  # Kitobning narxini olish
+        book_price = book.price  
 
-        # Countga qarab total_priceni hisoblash
         count = validated_data['count']
-        total_price = book_price * count  # total_price hisoblash
+        total_price = book_price * count  
 
-        # PreorderModel yaratish
         preorder = PreorderModel.objects.create(
             user=user,
             book=book,
@@ -109,7 +103,7 @@ class CreatePreorderSerializer(BasePreorderSerializer):
             phone=validated_data['phone'],
             color=validated_data.get('color') or None,
             size=validated_data.get('size') or None,
-            total_price=total_price  # total_priceni saqlash
+            total_price=total_price 
         )
 
         return preorder

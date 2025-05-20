@@ -35,7 +35,12 @@ class CreateUserSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        user_id = self.context["request"].user_id  
-        validated_data["user_id"] = user_id  
-
+        user_id = self.context["request"].user.user_id
+        
+        existing_user = User.objects.filter(user_id=user_id).first()
+        if existing_user:
+            return existing_user
+        
+        validated_data["user_id"] = user_id
         return super().create(validated_data)
+

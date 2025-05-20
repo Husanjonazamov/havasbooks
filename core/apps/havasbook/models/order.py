@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_core.models import AbstractBaseModel
-from core.apps.accounts.models import User
 
 
 
@@ -27,7 +26,7 @@ class OrderStatus(models.TextChoices):
 
 class OrderModel(AbstractBaseModel):
     user = models.ForeignKey(
-        User, 
+        "accounts.User", 
         on_delete=models.CASCADE,
         related_name="orders"
     )
@@ -62,12 +61,8 @@ class OrderModel(AbstractBaseModel):
 
 
     def __str__(self):
-        return self.user.first_name 
-    
-    class Meta:
-        verbose_name = _("Order")
-        verbose_name_plural = _("Orders")
-        
+        return self.user.first_name
+
 
     @classmethod
     def _create_fake(self):
@@ -97,7 +92,7 @@ class OrderitemModel(AbstractBaseModel):
 
 
     def __str__(self):
-        return self.order.user.first_name
+        return self.order.reciever_name
 
     @classmethod
     def _create_fake(self):

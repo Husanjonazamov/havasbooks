@@ -96,8 +96,6 @@ class CreateCartSerializer(BaseCartSerializer):
     def create(self, validated_data):
         user = self.context['request'].user
 
-        if not user or user.is_anonymous:
-            raise serializers.ValidationError("Foydalanuvchi aniqlanmadi.")
 
         cart_items_data = validated_data.pop('cart_items')
 
@@ -109,7 +107,7 @@ class CreateCartSerializer(BaseCartSerializer):
             book = item_data.get('book')
             color = item_data.get('color')  
             size = item_data.get('size')   
-            quantity = 1  # Default quantity
+            quantity = 1  
 
             if not book:
                 raise serializers.ValidationError("Item uchun book kiritilishi kerak.")
@@ -117,7 +115,6 @@ class CreateCartSerializer(BaseCartSerializer):
             total_price = Decimal(book.price) * Decimal(quantity)  
             total_price_sum += total_price
 
-            # Tekshiruv: agar bunday mahsulot allaqachon mavjud bo'lsa, quantity-ni oshiramiz
             existing_item = CartitemModel.objects.filter(
                 cart=cart,
                 book=book,
@@ -126,12 +123,10 @@ class CreateCartSerializer(BaseCartSerializer):
             ).first()
 
             if existing_item:
-                # Agar mahsulot mavjud bo'lsa, faqat quantity ni oshiramiz
                 existing_item.quantity += 1
                 existing_item.total_price = existing_item.book.price * existing_item.quantity
                 existing_item.save()
             else:
-                # Yangi item yaratish
                 CartitemModel.objects.create(
                     cart=cart,
                     book=book,
@@ -141,7 +136,6 @@ class CreateCartSerializer(BaseCartSerializer):
                     total_price=total_price,
                 )
 
-        # Savatdagi umumiy narxni yangilash
         cart.total_price = Decimal(cart.total_price) + total_price_sum
         cart.save()
 

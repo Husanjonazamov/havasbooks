@@ -6,7 +6,7 @@ autocommand==2.2.2
 autopep8==2.3.2
 backports.tarfile==1.2.0
 bcrypt==4.3.0
-billiard==4.2.1 
+billiard==4.2.1
 boto3==1.37.28
 botocore==1.37.28
 celery==5.4.0
@@ -59,6 +59,7 @@ mdurl==0.1.2
 more-itertools==10.5.0
 packaging==24.2
 pillow==11.0.0
+payme-pkg==3.0.22
 pip-chill==1.0.3
 platformdirs==4.3.6
 polib==1.2.0

@@ -102,23 +102,18 @@ class RetrieveBookSerializer(BaseBookSerializer):
     def get_cart_id(self, obj):
         request = self.context.get('request')
         
-        if request and request.user.is_authenticated:
-            cart = CartModel.objects.filter(user=request.user).first()
-            if cart:
-                cart_item = CartitemModel.objects.filter(cart=cart, book=obj).first()
-                
-                print("Cart Item:", cart_item)
-                
-                if cart_item:
-                    return cart.id  
-                else:
-                    print("Cart Item topilmadi!")
+        cart = CartModel.objects.filter(user=request.user).first()
+        if cart:
+            cart_item = CartitemModel.objects.filter(cart=cart, book=obj).first()
+            
+            print("Cart Item:", cart_item)
+            
+            if cart_item:
+                return cart.id  
             else:
-                print("Cart topilmadi!")
+                print("Cart Item topilmadi!")
         else:
-            print("Foydalanuvchi login bo'lmagan!")
-        
-        return None  
+            print("Cart topilmadi!")
 
     
     # def get_images(self, obj):
