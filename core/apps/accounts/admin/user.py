@@ -10,9 +10,6 @@ class CustomUserAdmin(admin.UserAdmin, ModelAdmin):
     # add_form = UserCreationForm
     form = UserChangeForm
     list_display = (
-        "first_name",
-        "last_name",
-        "phone",
         "role",
         "user_id"
     )
