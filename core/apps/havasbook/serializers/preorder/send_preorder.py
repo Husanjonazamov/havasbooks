@@ -8,7 +8,7 @@ from config.env import env
 BOT_TOKEN = env("BOT_TOKEN")
 CHANNEL_ID = env.int("CHANNEL_ID")
 
-bot = telebot.TeleBot(BOT_TOKEN, parse_mode='HTML')  # ✅ to‘g‘rilandi
+bot = telebot.TeleBot(BOT_TOKEN, parse_mode='HTML')  
 
 
 def send_preorder_to_telegram(preorder, request):

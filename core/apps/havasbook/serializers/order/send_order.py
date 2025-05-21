@@ -4,11 +4,14 @@ from telebot.types import InputMediaPhoto
 from core.apps.havasbook.models import BookModel
 from core.apps.havasbook.serializers.order.generate_link import send_payment_options
 from config.env import env
+from .delivery_date import get_delivery_date
+
+
 
 BOT_TOKEN = env("BOT_TOKEN")
 CHANNEL_ID = env("CHANNEL_ID")
 
-bot = BOT_TOKEN
+bot = telebot.TeleBot(token=BOT_TOKEN)
 
 
 def send_order_to_telegram(order, location_name, latitude, longitude):
@@ -36,13 +39,15 @@ def send_order_to_telegram(order, location_name, latitude, longitude):
     for idx, item in enumerate(order_items, 1):
         book = item.book
         caption += (
-            f"\n{idx}. <b>{book.name}</b>\n"
-            f"   💵 Narxi: {int(item.price):,} so'm\n"
-            f"   📦 Miqdori: {item.quantity} dona\n"
+            f"\n<b>{idx}. {book.name}</b>\n"
+            f"   🔖 <b>Kitob ID:</b> {book.book_id}\n"
+            f"   💵 <b>Narxi:</b> {int(item.price):,} so'm\n"
+            f"   📦 <b>Miqdori:</b> {item.quantity} dona\n"
         )
 
         if book.image and book.image.path:
             image_paths.append(book.image.path)
+
 
     if image_paths:
         media_group = []
@@ -59,3 +64,15 @@ def send_order_to_telegram(order, location_name, latitude, longitude):
     
     else:
         bot.send_message(chat_id=chat_id, text=caption, parse_mode="HTML", reply_markup=markup)
+
+
+
+def send_user_order(order):
+    user_id = order.user.user_id
+    
+    delivery_date = get_delivery_date()
+    message = f"📦 Buyurtmangiz {delivery_date.strftime('%Y-yil %B oyining %d-kuni')} yetkazib beriladi. 😊"    
+    bot.send_message(
+        chat_id=user_id,
+        text=message
+    )

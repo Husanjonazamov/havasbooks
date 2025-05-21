@@ -41,6 +41,13 @@ class BookModel(AbstractBaseModel):
     discount_percent = models.DecimalField(
         _("chegirma foizi"), max_digits=10, decimal_places=2, null=True, blank=True
     )
+    
+    book_id = models.CharField(
+        verbose_name=_("Kitob id"),
+        max_length=155,
+        blank=True,
+        null=True
+    )
 
     quantity = models.PositiveIntegerField(
         _("Kitob soni"), default=0, null=True, blank=True

@@ -21,6 +21,7 @@ class BookAdmin(ModelAdmin, TabbedTranslationAdmin):
         'name',
         'price',
         'quantity',
+        "book_id",
         'is_discount',
     )
     

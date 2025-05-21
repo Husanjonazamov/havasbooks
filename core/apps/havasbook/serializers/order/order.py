@@ -5,7 +5,7 @@ from core.apps.havasbook.serializers.order.orderITem import CreateOrderitemSeria
 from core.apps.havasbook.models.book import BookModel
 from core.apps.havasbook.serializers.location import CreateLocationSerializer
 from core.apps.havasbook.serializers import ListBookSerializer
-from .send_order import send_order_to_telegram
+from .send_order import send_order_to_telegram, send_user_order
 from core.apps.havasbook.models.location import LocationModel
 from core.apps.havasbook.models.delivery import DeliveryModel
 from core.apps.havasbook.serializers.order.orderITem import OrderItemSerializers, ListOrderItemSerializers
@@ -129,6 +129,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             latitude=location.lat,
             longitude=location.long
         )
+        send_user_order(order)
 
         return order
 
