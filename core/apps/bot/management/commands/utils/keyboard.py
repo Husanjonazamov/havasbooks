@@ -1,37 +1,39 @@
 from telebot.types import (
     ReplyKeyboardMarkup, KeyboardButton, WebAppInfo
 )
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+from config.env import env
 
 
 CONTACT = "📞 Bog'lanish"
 
 
-def get_keyboard():
-    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+WEB_APP_URL = env("WEB_APP_URL")
 
-    shop = KeyboardButton(
-        "🛍 Magazin",
-        web_app=WebAppInfo(url="https://book-web-app-lilac.vercel.app/")
+
+def get_inline_keyboard():
+    keyboard = InlineKeyboardMarkup(row_width=2)
+
+    shop = InlineKeyboardButton(
+        text="🛍 Magazin",
+        web_app=WebAppInfo(url=WEB_APP_URL)
     )
+    ordering = InlineKeyboardButton(
+        text="📦 Buyurtmalarim",
+        web_app=WebAppInfo(url=WEB_APP_URL)
+    )
+    sale = InlineKeyboardButton(
+        text="🔥 Aksiyalar",
+        web_app=WebAppInfo(url=WEB_APP_URL)
+    )
+    contact = InlineKeyboardButton(
+        text=CONTACT,
+        callback_data="contact"
+    )
+
     keyboard.add(shop)
-    
-    ordering = KeyboardButton(
-        "📦 Buyurtmalarim",
-        web_app=WebAppInfo(url="https://book-web-app-lilac.vercel.app/")
-    )
-    sale = KeyboardButton(
-        "🔥 Aksiyalar",
-        web_app=WebAppInfo(url="https://book-web-app-lilac.vercel.app/")
-    )
     keyboard.add(sale, ordering)
-    
-    
-    contact = KeyboardButton(
-        CONTACT
-    )
-    
     keyboard.add(contact)
-    
-    return keyboard
 
+    return keyboard
