@@ -5,6 +5,4 @@ from ..models import LocationModel
 
 @register(LocationModel)
 class LocationTranslation(TranslationOptions):
-    fields = [
-        'title'
-    ]
+    fields = []
