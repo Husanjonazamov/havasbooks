@@ -11,9 +11,14 @@ class BookFilter(django_filters.FilterSet):
     category = django_filters.CharFilter(field_name='category__name', lookup_expr='icontains', label='Category')
     is_discount = django_filters.BooleanFilter(field_name='is_discount', label='Discounted Books')
     is_preorder = django_filters.BooleanFilter(field_name='is_preorder', label='Pre-order Books')
-    search = django_filters.CharFilter(method='filter_by_search', label='Search Books')
     
-    # 🔥 Popular filter - only return popular=True
+    type = django_filters.CharFilter(
+            field_name='product_type',
+            lookup_expr='exact',
+            label='Product Type'
+        )
+
+    search = django_filters.CharFilter(method='filter_by_search', label='Search Books')
     popular = django_filters.BooleanFilter(method='filter_by_popular', label='Popular Books')
 
     def filter_by_search(self, queryset, name, value):
@@ -26,7 +31,6 @@ class BookFilter(django_filters.FilterSet):
             queryset = queryset.filter(popular=True)
         return queryset
 
-    # 🧠 Ordering — sorting, including by popular
     ordering = django_filters.OrderingFilter(
         fields=(
             ('sold_count', 'sold_count'),
@@ -43,6 +47,7 @@ class BookFilter(django_filters.FilterSet):
             'price': 'Narx',
             'name': 'Nomi',
             'popular': 'Ommaboplik (popular=True oldin chiqadi)',
+            'type': 'Mahsulot turi',
         },
         label="Saralash tartibi"
     )
@@ -57,5 +62,7 @@ class BookFilter(django_filters.FilterSet):
             'category',
             'is_discount',
             'is_preorder',
-            'popular',  # qo‘shib qo‘yamiz, faqat popular=True chiqsin desa
+            'popular',
+            'search',
+            'type',  # filterga qo'shildi
         ]

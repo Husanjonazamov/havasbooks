@@ -7,11 +7,23 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+class ProductTypeChoice(models.TextChoices):
+    BOOK = 'book', _('Kitob')
+    CLOTHES = 'clothes', _('Kiyim')
+    TECHNIQUE = 'technique', _('Texnika')
+    OTHER = 'other', _('Boshqalar')
+
+
 
 class BookModel(AbstractBaseModel):
     name = models.CharField(_("name"), max_length=255)
     description = models.TextField(_("Mahsulot tavsifi"), null=True, blank=True)
-
+    product_type = models.CharField(
+        _("Mahsulot turi"),
+        max_length=50,
+        choices=ProductTypeChoice.choices,
+        default=ProductTypeChoice.BOOK
+    )
     category = models.ForeignKey(
         "havasbook.CategoryModel",
         verbose_name=_("Kategoriylar"),

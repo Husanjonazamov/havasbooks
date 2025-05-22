@@ -35,6 +35,7 @@ class BaseBookSerializer(AbstractTranslatedSerializer):
             'is_discount',
             'popular',
             'is_preorder',
+            'product_type',
             'created_at',
         ]
         
@@ -98,6 +99,7 @@ class RetrieveBookSerializer(BaseBookSerializer):
             'is_preorder',
             'is_discount',
             'images',
+            'product_type',
             'created_at',
         ]
         
