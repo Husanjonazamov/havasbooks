@@ -126,7 +126,13 @@ class CreatePreorderSerializer(serializers.ModelSerializer):
         )
 
         # Telegram va foydalanuvchiga xabar yuborish
-        send_preorder_to_telegram(preorder, self.context['request'])
+        send_preorder_to_telegram(
+            preorder=preorder,
+            location_name=location.title,
+            latitude=location.lat,
+            longitude=location.long, 
+            request=self.context['request']
+        )
         send_user_order(preorder)
 
         return preorder
