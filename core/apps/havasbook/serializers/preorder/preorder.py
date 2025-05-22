@@ -5,7 +5,7 @@ from core.apps.havasbook.models.book import BookModel
 from core.apps.havasbook.serializers.book import BaseBookSerializer
 
 from core.apps.havasbook.models import ColorModel, SizeModel
-from .send_preorder import send_preorder_to_telegram
+from .send_preorder import send_preorder_to_telegram, send_user_order
 
 
 
@@ -107,5 +107,6 @@ class CreatePreorderSerializer(BasePreorderSerializer):
         )
 
         send_preorder_to_telegram(preorder, self.context['request'])
+        send_user_order(preorder)
         
         return preorder

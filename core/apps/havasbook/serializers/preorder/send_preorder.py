@@ -5,6 +5,9 @@ from core.apps.havasbook.models import BookModel
 from core.apps.havasbook.serializers.order.generate_link import send_payment_options
 from config.env import env
 
+from core.apps.havasbook.serializers.order import get_delivery_date
+
+
 BOT_TOKEN = env("BOT_TOKEN")
 CHANNEL_ID = env.int("CHANNEL_ID")
 
@@ -34,3 +37,14 @@ def send_preorder_to_telegram(preorder, request):
             bot.send_photo(chat_id=chat_id, photo=img, caption=caption, parse_mode="HTML")
     else:
         bot.send_message(chat_id=chat_id, text=caption, parse_mode="HTML")
+
+
+def send_user_order(preorder):
+    user_id = preorder.user.user_id
+    
+    delivery_date = get_delivery_date()
+    message = f"📦 Buyurtmangiz {delivery_date.strftime('%Y-yil %B oyining %d-kuni')} yetkazib beriladi. 😊"    
+    bot.send_message(
+        chat_id=user_id,
+        text=message
+    )

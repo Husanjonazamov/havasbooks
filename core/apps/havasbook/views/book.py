@@ -18,6 +18,7 @@ from django.db.models import Q
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from core.apps.havasbook.filters.book import BookFilter
+from core.apps.user.permissions.user import UserPermission
 
 
 
@@ -32,7 +33,7 @@ class BooksSearchView(ModelViewSet):
 
         if q:
             queryset = queryset.filter(
-                Q(name__icontains=q) | Q(description__icontains=q)  # kerakli fieldlarni qo‘shasiz
+                Q(name__icontains=q) | Q(description__icontains=q) 
             )
         return queryset
 
@@ -43,7 +44,7 @@ class BooksSearchView(ModelViewSet):
 class BookView(BaseViewSetMixin, ReadOnlyModelViewSet):
     queryset = BookModel.objects.all()
     serializer_class = ListBookSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny, UserPermission]
     pagination_class = CustomPagination
 
     filter_backends = (DjangoFilterBackend, OrderingFilter)
@@ -62,6 +63,8 @@ class BookView(BaseViewSetMixin, ReadOnlyModelViewSet):
         context = super().get_serializer_context()
         context['request'] = self.request
         return context
+    
+    
 
 @extend_schema(tags=["bookImage"])
 class BookimageView(BaseViewSetMixin, ReadOnlyModelViewSet):
