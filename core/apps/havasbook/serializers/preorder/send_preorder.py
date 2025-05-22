@@ -19,8 +19,8 @@ def send_preorder_to_telegram(preorder, request):
 
     caption = (
         f"📦 <b>Yangi Buyurtma</b> #{preorder.id}\n\n"
-        f"👤 <b>Buyurtmachi:</b> {preorder.user_name}\n"
-        f"📞 <b>Telefon:</b> {preorder.phone}\n"
+        f"👤 <b>Buyurtmachi:</b> {preorder.reciever_name}\n"
+        f"📞 <b>Telefon:</b> {preorder.reciever_phone}\n"
         f"💰 <b>Jami summa:</b> {int(preorder.total_price):,} so'm\n"
         f"📚 <b>Buyurtmadagi kitoblar:</b>\n"
     )

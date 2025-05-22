@@ -54,8 +54,6 @@ class ListOrderSerializer(BaseOrderSerializer):
         return obj.location.title if obj.location else None
         
 
-
-
 class RetrieveOrderSerializer(BaseOrderSerializer):
     class Meta(BaseOrderSerializer.Meta): ...
 

@@ -6,7 +6,9 @@ from core.apps.havasbook.serializers.book import BaseBookSerializer
 
 from core.apps.havasbook.models import ColorModel, SizeModel
 from .send_preorder import send_preorder_to_telegram, send_user_order
-
+from core.apps.havasbook.models import DeliveryModel, LocationModel
+from core.apps.havasbook.models.preorder import OrderStatus
+from core.apps.havasbook.serializers.location import CreateLocationSerializer
 
 
 class BasePreorderSerializer(serializers.ModelSerializer):
@@ -18,8 +20,8 @@ class BasePreorderSerializer(serializers.ModelSerializer):
             "id",
             "book",
             "created_at",
-            "user_name",
-            "phone",
+            "reciever_name",
+            "reciever_phone",
             "count",
             "status",
             "total_price"
@@ -51,8 +53,8 @@ class BasePreorderSerializer(serializers.ModelSerializer):
         
         # Fields with the correct types as str
         representation["created_at"] = str(instance.created_at)  
-        representation["user_name"] = str(instance.user_name)  
-        representation["phone"] = str(instance.phone)  
+        representation["reciever_name"] = str(instance.reciever_name)  
+        representation["reciever_phone"] = str(instance.reciever_phone)  
         representation["count"] = str(instance.count)  
         representation["status"] = str(instance.status)  
         representation["total_price"] = str(instance.total_price) 
@@ -66,47 +68,79 @@ class ListPreorderSerializer(BasePreorderSerializer):
 class RetrievePreorderSerializer(BasePreorderSerializer):
     class Meta(BasePreorderSerializer.Meta): ...
 
-class CreatePreorderSerializer(BasePreorderSerializer):
-    book = serializers.PrimaryKeyRelatedField(queryset=BookModel.objects.all())
-    color = serializers.PrimaryKeyRelatedField(
-        queryset=ColorModel.objects.all(), required=False, allow_null=True
-    )
-    size = serializers.PrimaryKeyRelatedField(
-        queryset=SizeModel.objects.all(), required=False, allow_null=True
-    )
 
-    class Meta(BasePreorderSerializer.Meta):
+
+
+class CreatePreorderSerializer(serializers.ModelSerializer):
+    location = CreateLocationSerializer()
+    delivery_method = serializers.PrimaryKeyRelatedField(queryset=DeliveryModel.objects.all())
+    reciever = serializers.DictField(write_only=True)  # {'name': ..., 'phone': ...}
+    book = serializers.PrimaryKeyRelatedField(queryset=BookModel.objects.all())
+    color = serializers.PrimaryKeyRelatedField(queryset=ColorModel.objects.all(), required=False, allow_null=True)
+    size = serializers.PrimaryKeyRelatedField(queryset=SizeModel.objects.all(), required=False, allow_null=True)
+    count = serializers.IntegerField()
+
+    class Meta:
+        model = PreorderModel
         fields = [
-            'id',
+            'location',
+            'delivery_method',
+            'reciever',
             'book',
-            'color', 
+            'color',
             'size',
             'count',
-            'user_name',
-            'phone'
+            'payment_method',
         ]
 
     def create(self, validated_data):
+        location_data = validated_data.pop('location')
+        reciever_data = validated_data.pop('reciever')
+        book = validated_data.pop('book')
+        color = validated_data.pop('color', None)
+        size = validated_data.pop('size', None)
+        count = validated_data.pop('count')
+        delivery_method = validated_data.pop('delivery_method')
+        payment_method = validated_data.pop('payment_method', None)
+
         user = self.context['request'].user
 
-        book = validated_data['book']
-        book_price = book.price  
+        location = LocationModel.objects.create(**location_data)
 
-        count = validated_data['count']
-        total_price = book_price * count  
+        # Umumiy narx hisoblash (kitob narxi * soni)
+        book_price = book.price
+        total_price = book_price * count
 
         preorder = PreorderModel.objects.create(
             user=user,
+            location=location,
+            delivery_method=delivery_method,
+            payment_method=payment_method,
+            reciever_name=reciever_data['name'],
+            reciever_phone=reciever_data['phone'],
             book=book,
+            color=color,
+            size=size,
             count=count,
-            user_name=validated_data['user_name'],
-            phone=validated_data['phone'],
-            color=validated_data.get('color') or None,
-            size=validated_data.get('size') or None,
-            total_price=total_price 
+            total_price=total_price,
         )
 
+        # Telegram va foydalanuvchiga xabar yuborish
         send_preorder_to_telegram(preorder, self.context['request'])
         send_user_order(preorder)
-        
+
         return preorder
+    
+    
+class OrderStatusSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = PreorderModel
+        fields = [
+            'status'
+        ]
+
+    def validate_status(self, value):
+        valid_statuses = [status.value for status in OrderStatus]
+        if value not in valid_statuses:
+            raise serializers.ValidationError("Invalid status.")
+        return value

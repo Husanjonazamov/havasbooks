@@ -6,9 +6,9 @@ class PreorderFilter(django_filters.FilterSet):
         choices=Status.choices, 
         label="Status"
     )
-    user_name = django_filters.CharFilter(lookup_expr='icontains', label="Foydalanuvchi ismi")
+    reciever_name = django_filters.CharFilter(lookup_expr='icontains', label="Foydalanuvchi ismi")
 
     class Meta:
         model = PreorderModel
-        fields = ['status', 'user_name']
+        fields = ['status', 'reciever_name']
  

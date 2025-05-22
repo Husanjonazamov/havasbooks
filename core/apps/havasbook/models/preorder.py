@@ -12,6 +12,21 @@ class Status(models.TextChoices):
     CANCELLED = 'cancelled', _('Bekor qilindi')
 
 
+class PaymentMethodChoice(models.TextChoices):
+    CASH = "cash", _("Naqt pul")
+    CLICK = "click", _("Click")
+    PAYME = "payme", _("Payme")
+    PAYNET = "paynet", _("Paynet")
+    UZUM = "uzum_card", _("Uzum karta")
+
+
+ 
+class OrderStatus(models.TextChoices):
+    NEW = "new", _("Yangi")
+    DELIVERED = "delivered", _("Topshirilgan")
+    CANCELLED = "cancelled", _("Bekor qilingan")
+
+
 
 class PreorderModel(AbstractBaseModel):
     user = models.ForeignKey(
@@ -28,13 +43,37 @@ class PreorderModel(AbstractBaseModel):
         _("Mahlulot Soni"),
         default=1
     )
-    user_name = models.CharField(
+    reciever_name = models.CharField(
         _("Foydalanuvchi ismi"),
         max_length=250, 
         null=True,
         blank=True
     )
-    phone = models.CharField(
+    payment_method = models.CharField(
+        _("To'lov turi"),
+        max_length=50,
+        choices=PaymentMethodChoice.choices,
+        default='click'
+    )
+    status = models.CharField(
+        _("Status"),
+        max_length=50,
+        choices=OrderStatus.choices,
+        default=OrderStatus.NEW
+    )  
+
+    location = models.ForeignKey(
+        "havasbook.LocationModel",
+        on_delete=models.CASCADE,
+        related_name="preorder",
+    )
+    delivery_method = models.ForeignKey(
+        'havasbook.DeliveryModel',
+        on_delete=models.CASCADE,
+        related_name="preorder",
+        null=True, blank=True
+    )
+    reciever_phone = models.CharField(
         _("Telefon raqam"),
         max_length=100,
         null=True,
