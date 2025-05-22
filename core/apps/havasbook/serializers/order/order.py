@@ -60,6 +60,8 @@ class RetrieveOrderSerializer(BaseOrderSerializer):
 
 
 
+from decimal import Decimal
+
 class CreateOrderSerializer(serializers.ModelSerializer):
     location = CreateLocationSerializer()
     order_item = CreateOrderitemSerializer(many=True)
@@ -86,7 +88,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
 
         location = LocationModel.objects.create(**location_data)
         delivery_method = validated_data['delivery_method']
-        delivery_price = delivery_method.price
+        delivery_price = delivery_method.price if delivery_method.price is not None else Decimal('0.00')
 
         order = OrderModel.objects.create(
             user=user,
@@ -98,11 +100,11 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             reciever_phone=reciever_data['phone'],
         )
 
-        total_price = 0
+        total_price = Decimal('0.00')  
         for item in order_items_data:
             book_id = item['book'] if isinstance(item['book'], int) else item['book'].id
             book = BookModel.objects.get(id=book_id)
-            price = book.price
+            price = book.price if book.price is not None else Decimal('0.00')
             quantity = item['quantity']
             OrderitemModel.objects.create(
                 order=order,
@@ -120,7 +122,6 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         if cart:
             CartitemModel.objects.filter(cart=cart).delete()
 
-
         send_order_to_telegram(
             order=order,
             location_name=location.title,
@@ -130,6 +131,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         send_user_order(order)
 
         return order
+
 
 
 
