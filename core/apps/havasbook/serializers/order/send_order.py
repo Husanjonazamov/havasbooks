@@ -14,9 +14,10 @@ CHANNEL_ID = env("CHANNEL_ID")
 bot = telebot.TeleBot(token=BOT_TOKEN)
 
 
-def send_order_to_telegram(order, location_name, latitude, longitude):
 
-    chat_id =CHANNEL_ID
+
+def send_order_to_telegram(order, location_name, latitude, longitude):
+    chat_id = CHANNEL_ID
     yandex_url = f"https://yandex.com/maps/?pt={longitude},{latitude}&z=14&l=map"
 
     markup = types.InlineKeyboardMarkup()
@@ -44,12 +45,19 @@ def send_order_to_telegram(order, location_name, latitude, longitude):
             f"   💵 <b>Narxi:</b> {int(item.price):,} so'm\n"
             f"   📦 <b>Miqdori:</b> {item.quantity} dona\n"
         )
-
         if book.image and book.image.path:
             image_paths.append(book.image.path)
 
-
-    if image_paths:
+    if len(image_paths) == 1:
+        with open(image_paths[0], 'rb') as img:
+            bot.send_photo(
+                chat_id=chat_id,
+                photo=img,
+                caption=caption,
+                parse_mode="HTML",
+                reply_markup=markup
+            )
+    elif len(image_paths) > 1:
         media_group = []
         for i, path in enumerate(image_paths):
             with open(path, 'rb') as img:
@@ -61,10 +69,8 @@ def send_order_to_telegram(order, location_name, latitude, longitude):
 
         bot.send_media_group(chat_id=chat_id, media=media_group)
         bot.send_message(chat_id=chat_id, text="📍 <b>Manzilni ko‘rish uchun tugmani bosing:</b>", parse_mode="HTML", reply_markup=markup)
-    
     else:
         bot.send_message(chat_id=chat_id, text=caption, parse_mode="HTML", reply_markup=markup)
-
 
 
 def send_user_order(order):

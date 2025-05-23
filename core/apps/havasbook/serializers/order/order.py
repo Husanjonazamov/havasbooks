@@ -23,6 +23,7 @@ class BaseOrderSerializer(serializers.ModelSerializer):
             'payment_method',
             'total_price',
             'status',
+            'order_type',
             'comment',
         ]
 
@@ -43,6 +44,7 @@ class ListOrderSerializer(BaseOrderSerializer):
             'total_price',
             'status',
             'comment',
+            'order_type',
             'order_item' 
         ]
         
@@ -76,6 +78,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             'reciever',
             'payment_method',
             'comment',
+            'order_type',
             'order_item'
         ]
 
@@ -96,6 +99,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             delivery_method=delivery_method,
             payment_method=validated_data.get('payment_method'),
             comment=validated_data.get('comment'),
+            order_type=validated_data.get('order_type'),
             reciever_name=reciever_data['name'],
             reciever_phone=reciever_data['phone'],
         )

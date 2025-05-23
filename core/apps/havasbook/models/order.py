@@ -23,6 +23,12 @@ class OrderStatus(models.TextChoices):
     CANCELLED = "cancelled", _("Bekor qilingan")
 
 
+class OrderType(models.TextChoices):
+    ORDER = "order", _("Oddiy buyurtma")
+    PREORDER = "preorder", _("Oldindan buyurtma")
+
+
+
 class OrderModel(AbstractBaseModel):
     user = models.ForeignKey(
         "accounts.User", 
@@ -41,6 +47,12 @@ class OrderModel(AbstractBaseModel):
         on_delete=models.CASCADE,
         related_name="orders",
         null=True, blank=True
+    )
+    order_type = models.CharField(
+        verbose_name=_("Buyurtma turi"),
+        max_length=100,
+        choices=OrderType.choices,
+        default=OrderType.ORDER
     )
      
     payment_method = models.CharField(
