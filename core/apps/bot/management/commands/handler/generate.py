@@ -11,7 +11,6 @@ from rest_framework.response import Response
 PAYME_ID = env.str("PAYME_ID")
 PAYME_KEY = env.str("PAYME_KEY")
 
-print("------", PAYME_KEY, PAYME_ID, "---")
 
 payme = Payme(
     payme_id=PAYME_ID,

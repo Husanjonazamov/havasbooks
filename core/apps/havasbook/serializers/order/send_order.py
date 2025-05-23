@@ -73,13 +73,13 @@ def send_order_to_telegram(order, location_name, latitude, longitude):
         bot.send_message(chat_id=chat_id, text=caption, parse_mode="HTML", reply_markup=markup)
 
 
-# def send_user_order(order, payment_link):
-#     user_id = order.user.user_id
+def send_user_order(order):
+    user_id = order.user.user_id
     
-#     delivery_date = get_delivery_date()
-#     message = f"📦 Buyurtmangiz {delivery_date.strftime('%Y-yil %B oyining %d-kuni')} yetkazib beriladi. 😊"    
-#     bot.send_message(
-#         chat_id=user_id,
-#         text=message
-#     )
+    delivery_date = get_delivery_date()
+    message = f"📦 Buyurtmangiz {delivery_date.strftime('%Y-yil %B oyining %d-kuni')} yetkazib beriladi. 😊"    
+    bot.send_message(
+        chat_id=user_id,
+        text=message
+    )
 
