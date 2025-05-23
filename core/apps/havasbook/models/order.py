@@ -10,7 +10,6 @@ class DeliveryMethodChoice(models.TextChoices):
 
 
 class PaymentMethodChoice(models.TextChoices):
-    CASH = "cash", _("Naqt pul")
     CLICK = "click", _("Click")
     PAYME = "payme", _("Payme")
     PAYNET = "paynet", _("Paynet")

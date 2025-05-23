@@ -4,14 +4,25 @@ from django.shortcuts import get_object_or_404
 from core.apps.havasbook.models.order import OrderModel
 from core.apps.accounts.models.user import User
 
+from rest_framework.permissions  import AllowAny
+from core.apps.user.permissions.user import UserPermission
 from payme import Payme
 from config.env import env
 
-PAYME_ID = env("PAYME_ID")
-payme = Payme(payme_id=PAYME_ID)
+PAYME_ID = env.str("PAYME_ID")
+PAYME_KEY = env.str("PAYME_KEY")
+
+print("------", PAYME_KEY, PAYME_ID, "---")
+
+payme = Payme(
+    payme_id=PAYME_ID,
+    payme_key=PAYME_KEY
+)
 
 
 class OrderPaymentLinkView(views.APIView):
+    permission_classes = [AllowAny, UserPermission]
+    
     def post(self, request):
         order_id = request.data.get("order_id")
         if not order_id:
@@ -22,21 +33,19 @@ class OrderPaymentLinkView(views.APIView):
         if not order.user:  
             return Response({"error": "Orderga bog'liq foydalanuvchi topilmadi"}, status=400)
 
-        amount = int(order.total_price * 100)
-     
-        try:
-            pay_link = payme.initializer.generate_pay_link(
-                id=str(order.id),  
-                amount=amount,
-                return_url="https://t.me/jigarPrint_bot"
-            )
-        except Exception as e:
-            return Response({"error": f"Payme link yaratishda xatolik: {str(e)}"}, status=500)
+        amount = order.total_price 
+         
+        pay_link = payme.initializer.generate_pay_link(
+            id=int(order_id),  
+            amount=amount,
+            return_url=""
+        )
+        print(pay_link)
 
         result = {
             "order_id": order.id,
             "user_id": order.user.user_id,
-            "total_price": order.total_price,
+            "total_price": order.total_price * 100,   
             "pay_link": pay_link
         }
 
