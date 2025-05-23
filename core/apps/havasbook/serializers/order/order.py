@@ -11,6 +11,9 @@ from core.apps.havasbook.models.delivery import DeliveryModel
 from core.apps.havasbook.serializers.order.orderITem import OrderItemSerializers, ListOrderItemSerializers
 from core.apps.havasbook.models.cart import CartitemModel, CartModel
 
+
+
+
 class BaseOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderModel
@@ -119,7 +122,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             total_price += price * quantity
 
         total_price += delivery_price
-        order.total_amount = total_price
+        order.total_price = total_price
         order.save()
 
         cart = CartModel.objects.filter(user=user).first()

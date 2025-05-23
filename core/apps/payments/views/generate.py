@@ -19,29 +19,42 @@ payme = Payme(
     payme_key=PAYME_KEY
 )
 
-
 class OrderPaymentLinkView(views.APIView):
     permission_classes = [AllowAny, UserPermission]
     
     def post(self, request):
         order_id = request.data.get("order_id")
+
         if not order_id:
             return Response({"error": "order_id is required"}, status=400)
 
         order = get_object_or_404(OrderModel, id=order_id)
+        payment_type = order.payment_method
 
         if not order.user:  
             return Response({"error": "Orderga bog'liq foydalanuvchi topilmadi"}, status=400)
 
         amount = order.total_price 
          
-        pay_link = payme.initializer.generate_pay_link(
-            id=int(order_id),  
-            amount=amount,
-            return_url=""
-        )
-        print(pay_link)
-
+        if payment_type == "payme":
+            pay_link = payme.initializer.generate_pay_link(
+                id=int(order_id),  
+                amount=amount,
+                return_url=""
+            )
+        elif payment_type == "click":
+            return Response({
+                "detail": "Bu Click https://click.uz/"
+            })
+        elif payment_type == "paynet":
+            return Response({
+                "detail": "Bu Paynet https://paynet.uz/"
+            })
+        else:
+            return Response({
+                "detail": "Bu Uzum card https://uzum.uz/"
+            })
+        
         result = {
             "order_id": order.id,
             "user_id": order.user.user_id,
