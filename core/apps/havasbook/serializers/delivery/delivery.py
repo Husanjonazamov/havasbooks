@@ -11,7 +11,8 @@ class BaseDeliverySerializer(AbstractTranslatedSerializer):
         ]
         fields = [
             'id',
-            'title'
+            'title',
+            'price'
         ]
 
 
