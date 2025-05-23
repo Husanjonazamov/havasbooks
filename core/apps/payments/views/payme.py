@@ -1,5 +1,5 @@
 from payme.views import PaymeWebHookAPIView
-from core.apps.havasbook.serializers.order.send_order import send_user_order
+from core.apps.havasbook.serializers.order.send_order import send_user_order, send_payment_success
 from core.apps.havasbook.models import OrderModel
 
 
@@ -20,6 +20,7 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
             order = OrderModel.objects.get(id=order_id)
             print(order_id)
             send_user_order(order)
+            send_payment_success(order)
         except OrderModel.DoesNotExist:
             print(f"Order with ID {order_id} not found.")            
 

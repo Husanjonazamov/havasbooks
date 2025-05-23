@@ -7,7 +7,6 @@ from config.env import env
 from .delivery_date import get_delivery_date
 
 
-
 BOT_TOKEN = env("BOT_TOKEN")
 CHANNEL_ID = env("CHANNEL_ID")
 
@@ -73,6 +72,8 @@ def send_order_to_telegram(order, location_name, latitude, longitude):
         bot.send_message(chat_id=chat_id, text=caption, parse_mode="HTML", reply_markup=markup)
 
 
+
+
 def send_user_order(order):
     user_id = order.user.user_id
     
@@ -81,5 +82,29 @@ def send_user_order(order):
     bot.send_message(
         chat_id=user_id,
         text=message
+    )
+    
+    
+    
+def send_payment_success(order):
+    order_id = order.id
+    user_id = order.user.user_id
+    total_price = order.total_price    
+    
+    message = (
+        f"✅ <b>To‘lov muvaffaqiyatli amalga oshirildi!</b>\n\n"
+        f"🧾 <b>Buyurtma ID:</b> #{order_id}\n"
+        f"👤 <b>Mijoz:</b> {user_id}\n"
+        f"💰 <b>To‘langan summa:</b> {total_price} so'm\n\n"
+        f"📦 Buyurtma to‘liq rasmiylashtirildi va tasdiqlandi. "
+        f"Iltimos, yetkazib berish jarayonini boshlang.\n\n"
+        f"🕒 <i>Rahmat sizga!</i>"
+    )
+    
+    
+    bot.send_message(
+        chat_id=CHANNEL_ID,
+        text=message,
+        parse_mode="HTML"
     )
 
