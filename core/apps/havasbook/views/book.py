@@ -18,7 +18,6 @@ from django.db.models import Q
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from core.apps.havasbook.filters.book import BookFilter
-from core.apps.user.permissions.user import UserPermission
 
 
 
@@ -52,7 +51,6 @@ class BookView(BaseViewSetMixin, ReadOnlyModelViewSet):
     ordering_fields = ['price', 'sold_count', 'view_count', 'created_at', 'popular'] 
     ordering = ['-sold_count'] 
 
-    lookup_field = 'id'
 
     action_permission_classes = {}
     action_serializer_class = {
@@ -60,6 +58,12 @@ class BookView(BaseViewSetMixin, ReadOnlyModelViewSet):
         "retrieve": RetrieveBookSerializer,
         "create": CreateBookSerializer,
     }
+
+    def get_permissions(self):
+        if self.action == 'retrieve':
+            from core.apps.user.permissions.user import UserPermission
+            return [UserPermission()]
+        return [AllowAny()]
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
