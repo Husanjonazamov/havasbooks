@@ -44,13 +44,15 @@ class BooksSearchView(ModelViewSet):
 class BookView(BaseViewSetMixin, ReadOnlyModelViewSet):
     queryset = BookModel.objects.all()
     serializer_class = ListBookSerializer
-    permission_classes = [AllowAny, UserPermission]
+    permission_classes = [AllowAny]
     pagination_class = CustomPagination
 
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_class = BookFilter
     ordering_fields = ['price', 'sold_count', 'view_count', 'created_at', 'popular'] 
     ordering = ['-sold_count'] 
+
+    lookup_field = 'id'
 
     action_permission_classes = {}
     action_serializer_class = {
