@@ -120,7 +120,11 @@ class CreateOrderSerializer(serializers.ModelSerializer):
                 price=price
             )
             total_price += price * quantity
-
+            print(book.sold_count)
+            
+            book.sold_count = (book.sold_count or 0) + quantity
+            book.save()
+    
         total_price += delivery_price
         order.total_price = total_price
         order.save()
