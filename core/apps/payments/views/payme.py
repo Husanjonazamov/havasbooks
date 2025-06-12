@@ -16,7 +16,7 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
         Handle the successful payment. You can override this method
         """
         try:
-            order_id = int(params.get("account", {}).get("id"))
+            order_id = int(params.get("account", {}).get("order_id"))
             order = OrderModel.objects.get(id=order_id)
             print(f"Order: id {order_id}")
             print(f"bu parasms: {params}") 
