@@ -1,16 +1,15 @@
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-from loader import bot
+import requests
 from payme import Payme
 from config.env import env
 
 PAYME_ID = env.str("PAYME_ID")
 PAYME_KEY = env.str("PAYME_KEY")
+BOT_TOKEN = env.str("BOT_TOKEN")
 
 payme = Payme(
     payme_id=PAYME_ID,
     payme_key=PAYME_KEY
 )
-
 
 def send_payment_link(order):
     user_id = order.user.user_id
@@ -31,20 +30,19 @@ def send_payment_link(order):
             return_url="https://t.me/Havas_book_bot"
         )
     elif payment_type == "paynet":
-        bot.send_message(
-            chat_id=user_id,
-            text="📌 Bu Paynet: https://paynet.uz/"
+        message_text = "📌 Bu Paynet: https://paynet.uz/"
+        requests.post(
+            url=f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+            json={"chat_id": user_id, "text": message_text}
         )
         return
     else:
-        bot.send_message(
-            chat_id=user_id,
-            text="📌 Bu Uzum card: https://uzum.uz/"
+        message_text = "📌 Bu Uzum card: https://uzum.uz/"
+        requests.post(
+            url=f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+            json={"chat_id": user_id, "text": message_text}
         )
         return
-
-    markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton(text="💳 To'lov qilish", url=pay_link))
 
     message_text = (
         "🛒 Hurmatli mijoz!\n\n"
@@ -53,8 +51,18 @@ def send_payment_link(order):
         "Rahmat! 😊"
     )
 
-    bot.send_message(
-        chat_id=user_id,
-        text=message_text,
-        reply_markup=markup
+    payload = {
+        "chat_id": user_id,
+        "text": message_text,
+        "reply_markup": {
+            "inline_keyboard": [[
+                {"text": "💳 To'lov qilish", "url": pay_link}
+            ]]
+        },
+        "parse_mode": "HTML"
+    }
+
+    requests.post(
+        url=f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+        json=payload
     )

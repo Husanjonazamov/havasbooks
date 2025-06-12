@@ -143,8 +143,6 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         return order
 
 
-
-
 class OrderStatusSerializers(serializers.ModelSerializer):
     class Meta:
         model = OrderModel
