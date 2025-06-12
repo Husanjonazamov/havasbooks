@@ -10,7 +10,7 @@ from core.apps.havasbook.models.location import LocationModel
 from core.apps.havasbook.models.delivery import DeliveryModel
 from core.apps.havasbook.serializers.order.orderITem import OrderItemSerializers, ListOrderItemSerializers
 from core.apps.havasbook.models.cart import CartitemModel, CartModel
-from handler.generate import send_payment_link
+from core.apps.havasbook.serializers.order.send_generate import send_payment_link
 
 
 class BaseOrderSerializer(serializers.ModelSerializer):
