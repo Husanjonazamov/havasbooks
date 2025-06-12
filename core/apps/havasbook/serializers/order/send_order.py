@@ -2,16 +2,15 @@ import telebot
 from telebot import types
 from telebot.types import InputMediaPhoto
 from core.apps.havasbook.models import BookModel
-from core.apps.havasbook.serializers.order.generate_link import send_payment_options
 from config.env import env
 from .delivery_date import get_delivery_date
-
+import requests
 
 BOT_TOKEN = env("BOT_TOKEN")
-CHANNEL_ID = env("CHANNEL_ID")
+CHANNEL_ID = env.int("CHANNEL_ID")
+
 
 bot = telebot.TeleBot(token=BOT_TOKEN)
-
 
 
 
@@ -76,24 +75,27 @@ def send_order_to_telegram(order, location_name, latitude, longitude):
 
 def send_user_order(order):
     user_id = order.user.user_id
-    
     print(f"userid_: {user_id}")
-    delivery_date = get_delivery_date()
-    message = f"📦 Buyurtmangiz {delivery_date.strftime('%Y-yil %B oyining %d-kuni')} yetkazib beriladi. 😊"    
-    bot.send_message(
-        chat_id=user_id,
-        text=message
-    )
     
+    delivery_date = get_delivery_date()
+    message = f"📦 Buyurtmangiz {delivery_date.strftime('%Y-yil %B oyining %d-kuni')} yetkazib beriladi. 😊"
+
+    requests.post(
+        url=f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+        json={
+            "chat_id": user_id,
+            "text": message
+        }
+    )
+
     
     
 def send_payment_success(order):
     order_id = order.id
     user_id = order.user.user_id
-    total_price = order.total_price  
+    total_price = order.total_price
     print(f"userid_: {user_id}")
-      
-    
+
     message = (
         f"✅ <b>To‘lov muvaffaqiyatli amalga oshirildi!</b>\n\n"
         f"🧾 <b>Buyurtma ID:</b> #{order_id}\n"
@@ -103,12 +105,14 @@ def send_payment_success(order):
         f"Iltimos, yetkazib berish jarayonini boshlang.\n\n"
         f"🕒 <i>Rahmat sizga!</i>"
     )
-    ADMIN_ID = env.int('ADMIN_ID')
-    
-    
-    bot.send_message(
-        chat_id=ADMIN_ID,
-        text=message,
-        parse_mode="HTML"
+
+    requests.post(
+        url=f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+        json={
+            "chat_id": CHANNEL_ID,
+            "text": message,
+            "parse_mode": "HTML"
+        }
     )
+
 

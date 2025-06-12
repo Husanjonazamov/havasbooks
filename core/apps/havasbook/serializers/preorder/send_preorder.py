@@ -2,7 +2,6 @@ import telebot
 from telebot import types
 from telebot.types import InputMediaPhoto
 from core.apps.havasbook.models import BookModel
-from core.apps.havasbook.serializers.order.generate_link import send_payment_options
 from config.env import env
 
 from core.apps.havasbook.serializers.order import get_delivery_date
