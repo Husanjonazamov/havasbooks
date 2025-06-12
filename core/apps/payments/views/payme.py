@@ -18,7 +18,11 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
         try:
             order_id = int(params.get("account", {}).get("id"))
             order = OrderModel.objects.get(id=order_id)
-            print(order_id)
+            print(f"Order: id {order_id}")
+            print(f"bu parasms: {params}") 
+            print(f"bu accoun: {params.get("account", {})}")  
+            print(f"bu params id: {params.get("account", {}).get("id")}")  
+
             send_user_order(order)
             send_payment_success(order)
         except OrderModel.DoesNotExist:

@@ -77,6 +77,7 @@ def send_order_to_telegram(order, location_name, latitude, longitude):
 def send_user_order(order):
     user_id = order.user.user_id
     
+    print(f"userid_: {user_id}")
     delivery_date = get_delivery_date()
     message = f"📦 Buyurtmangiz {delivery_date.strftime('%Y-yil %B oyining %d-kuni')} yetkazib beriladi. 😊"    
     bot.send_message(
@@ -89,7 +90,9 @@ def send_user_order(order):
 def send_payment_success(order):
     order_id = order.id
     user_id = order.user.user_id
-    total_price = order.total_price    
+    total_price = order.total_price  
+    print(f"userid_: {user_id}")
+      
     
     message = (
         f"✅ <b>To‘lov muvaffaqiyatli amalga oshirildi!</b>\n\n"
@@ -100,10 +103,11 @@ def send_payment_success(order):
         f"Iltimos, yetkazib berish jarayonini boshlang.\n\n"
         f"🕒 <i>Rahmat sizga!</i>"
     )
+    ADMIN_ID = env.int('ADMIN_ID')
     
     
     bot.send_message(
-        chat_id=CHANNEL_ID,
+        chat_id=ADMIN_ID,
         text=message,
         parse_mode="HTML"
     )
