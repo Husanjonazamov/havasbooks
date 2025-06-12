@@ -1,4 +1,4 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from loader import bot
 from payme import Payme
 from config.env import env
@@ -12,7 +12,7 @@ payme = Payme(
 )
 
 
-async def send_payment_link(order):
+def send_payment_link(order):
     user_id = order.user.user_id
     payment_type = order.payment_method
     order_id = order.id
@@ -31,23 +31,20 @@ async def send_payment_link(order):
             return_url="https://t.me/Havas_book_bot"
         )
     elif payment_type == "paynet":
-        await bot.send_message(
+        bot.send_message(
             chat_id=user_id,
             text="📌 Bu Paynet: https://paynet.uz/"
         )
         return
     else:
-        await bot.send_message(
+        bot.send_message(
             chat_id=user_id,
             text="📌 Bu Uzum card: https://uzum.uz/"
         )
         return
 
-    markup = InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text="💳 To'lov qilish", url=pay_link)]
-        ]
-    )
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton(text="💳 To'lov qilish", url=pay_link))
 
     message_text = (
         "🛒 Hurmatli mijoz!\n\n"
@@ -56,7 +53,7 @@ async def send_payment_link(order):
         "Rahmat! 😊"
     )
 
-    await bot.send_message(
+    bot.send_message(
         chat_id=user_id,
         text=message_text,
         reply_markup=markup
