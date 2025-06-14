@@ -28,7 +28,10 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
             send_user_order(order)
             send_payment_success(order)
         except OrderModel.DoesNotExist:
-            print(f"Order with ID not found.")            
+            print(f"Order with ID not found.")     
+        except Exception as e:
+            print(e)
+                   
 
         print(f"Transaction successfully performed for this params: {params} and performed_result: {result}")
 
