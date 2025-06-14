@@ -17,6 +17,7 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
         Handle the successful payment. You can override this method
         """
         try:
+            raise Exception(params)
             transaction_id = int(params.get("account", {}).get("id"))
             raise Exception(PaymeTransactions.objects.filter(transaction_id=transaction_id))
             order_id = None
@@ -30,7 +31,7 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
         except OrderModel.DoesNotExist:
             print(f"Order with ID not found.")     
         except Exception as e:
-            print(e)
+            print(f"===========\n\n{e}\n\n========================")
                    
 
         print(f"Transaction successfully performed for this params: {params} and performed_result: {result}")
