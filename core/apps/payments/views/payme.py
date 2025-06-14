@@ -16,13 +16,13 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
         Handle the successful payment. You can override this method
         """
         try:
+            print(params)
             order_id = int(params.get("account", {}).get("order_id"))
             order = OrderModel.objects.get(id=order_id)
             print(f"Order: id {order_id}")
             print(f"bu parasms: {params}") 
             print(f"bu accoun: {params.get("account", {})}")  
             print(f"bu params id: {params.get("account", {}).get("id")}")  
-
             send_user_order(order)
             send_payment_success(order)
         except OrderModel.DoesNotExist:
