@@ -2,6 +2,7 @@ from payme.views import PaymeWebHookAPIView
 from core.apps.havasbook.serializers.order.send_order import send_user_order, send_payment_success
 from core.apps.havasbook.models import OrderModel
 import logging
+from payme.models import PaymeTransactions
 
 class PaymeCallBackAPIView(PaymeWebHookAPIView):
     def handle_created_payment(self, params, result, *args, **kwargs):
@@ -16,9 +17,9 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
         Handle the successful payment. You can override this method
         """
         try:
-            logging.error(params)
-            # return
-            order_id = int(params.get("account", {}).get("order_id"))
+            transaction_id = int(params.get("account", {}).get("id"))
+            raise Exception(PaymeTransactions.objects.filter(transaction_id=transaction_id))
+            order_id = None
             order = OrderModel.objects.get(id=order_id)
             print(f"Order: id {order_id}")
             print(f"bu parasms: {params}") 
@@ -27,7 +28,7 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
             send_user_order(order)
             send_payment_success(order)
         except OrderModel.DoesNotExist:
-            print(f"Order with ID {order_id} not found.")            
+            print(f"Order with ID not found.")            
 
         print(f"Transaction successfully performed for this params: {params} and performed_result: {result}")
 
