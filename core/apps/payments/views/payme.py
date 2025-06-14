@@ -17,12 +17,10 @@ class PaymeCallBackAPIView(PaymeWebHookAPIView):
         Handle the successful payment. You can override this method
         """
         try:
-            raise Exception(params)
-            transaction_id = int(params.get("account", {}).get("id"))
-            raise Exception(PaymeTransactions.objects.filter(transaction_id=transaction_id))
-            order_id = None
-            order = OrderModel.objects.get(id=order_id)
-            print(f"Order: id {order_id}")
+            transaction_id = int(params.get("id"))
+            transaction = PaymeTransactions.objects.filter(transaction_id=transaction_id).first()
+            order = OrderModel.objects.get(id=transaction.account_id)
+            print(f"Order: id {order.id}")
             print(f"bu parasms: {params}") 
             print(f"bu accoun: {params.get("account", {})}")  
             print(f"bu params id: {params.get("account", {}).get("id")}")  
