@@ -44,7 +44,7 @@ class ListCartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CartModel
-        fields = [z
+        fields = [
             'total_price',
             'total_quantity',
             'total_discounted_price',
