@@ -45,11 +45,9 @@ class BaseCartitemSerializer(serializers.ModelSerializer):
             return ListSizeSerializer(obj.size).data
         return None
 
-
-
-
 from decimal import Decimal
 from rest_framework import serializers
+
 
 class ListCartitemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField(source="book.id")
@@ -90,7 +88,7 @@ class ListCartitemSerializer(serializers.ModelSerializer):
         return Decimal(obj.book.price) * obj.quantity
 
     def get_discounted_total_price(self, obj):
-        price = Decimal(obj.book.price)
+        price = Decimal(obj.book.orginal_price)
         quantity = obj.quantity
         discount = getattr(obj.book, 'discount_percent', 0) or 0
 
