@@ -55,7 +55,8 @@ class ListCartitemSerializer(serializers.ModelSerializer):
     color = serializers.CharField(source='color.name', default=None)
     size = serializers.CharField(source='size.name', default=None)
     image = serializers.SerializerMethodField()
-    price = serializers.DecimalField(source='book.original_price', max_digits=10, decimal_places=2)
+    price = serializers.DecimalField(source='book.price', max_digits=10, decimal_places=2)
+    original_price = serializers.DecimalField(source="book.original_price", max_digits=10, decimal_places=2)
     discounted_total_price = serializers.SerializerMethodField()
     discount_percent = serializers.SerializerMethodField()
     available_quantity = serializers.SerializerMethodField()
@@ -71,6 +72,7 @@ class ListCartitemSerializer(serializers.ModelSerializer):
             'size',
             'image',
             'price',
+            "original_price",
             'total_price',
             'discounted_total_price',
             'quantity',
