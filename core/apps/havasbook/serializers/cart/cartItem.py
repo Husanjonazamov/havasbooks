@@ -88,7 +88,7 @@ class ListCartitemSerializer(serializers.ModelSerializer):
         return Decimal(obj.book.price) * obj.quantity
 
     def get_discounted_total_price(self, obj):
-        price = Decimal(obj.book.orginal_price)
+        price = Decimal(obj.book.original_price)
         quantity = obj.quantity
         discount = getattr(obj.book, 'discount_percent', 0) or 0
 
