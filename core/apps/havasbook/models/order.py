@@ -72,7 +72,7 @@ class OrderModel(AbstractBaseModel):
 
 
     def __str__(self):
-        return self.user.first_name
+        return self.reciever_name
 
 
     @classmethod

@@ -3,7 +3,12 @@ from modeltranslation.admin import TabbedTranslationAdmin
 from unfold.admin import ModelAdmin, TabularInline
 
 from ..models import BookimageModel, BookModel
-
+from ..format_html.product import (
+    product_images,
+    colored_id
+)
+from django.utils.html import format_html
+from django.urls import reverse
 
 
 class BookimageInline(TabularInline):
@@ -16,13 +21,13 @@ class BookimageInline(TabularInline):
 class BookAdmin(ModelAdmin, TabbedTranslationAdmin):
     readonly_fields = ("price",)
     list_display = (
-        "id",
-        "__str__",
+        colored_id,
+        product_images,
         'name',
         'price',
         'quantity',
         "book_id",
-        'is_discount',
+        "toggle_discount_button",
     )
     
     list_filter = ('is_discount',)
@@ -41,6 +46,24 @@ class BookAdmin(ModelAdmin, TabbedTranslationAdmin):
     inlines = [
         BookimageInline,
     ]
+    
+    
+    def toggle_discount_button(self, obj):
+        url = reverse("toggle_is_discount", args=[obj.pk])
+        if obj.is_discount:
+            color = "green"
+            text = "ON"
+        else:
+            color = "gray"
+            text = "OFF"
+        return format_html(
+            f'<a href="{url}" style="background-color:{color};color:white;padding:5px 10px;border-radius:10px;text-decoration:none;">{text}</a>'
+        )
+
+    toggle_discount_button.short_description = "Discount Switch"
+
+
+
 
 @admin.register(BookimageModel)
 class BookimageAdmin(ModelAdmin):

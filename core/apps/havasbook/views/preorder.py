@@ -13,6 +13,8 @@ from core.apps.user.permissions.user import UserPermission
 
 
 
+
+
 @extend_schema(tags=["preorder"])
 class PreorderView(BaseViewSetMixin, ModelViewSet):
     queryset = PreorderModel.objects.all()

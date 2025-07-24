@@ -23,6 +23,17 @@ from rest_framework import status
 from core.apps.user.permissions.user import UserPermission
 
 
+from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponse
+from django.contrib import messages
+import requests
+
+from config.env import env
+
+BOT_TOKEN = env("BOT_TOKEN")
+CHANNEL_ID = env.int("CHANNEL_ID")
+
+
 
 
 @extend_schema(tags=["order"])
@@ -97,3 +108,33 @@ class OrderitemView(BaseViewSetMixin, ModelViewSet):
         "retrieve": RetrieveOrderitemSerializer,
         "create": CreateOrderitemSerializer,
     }
+    
+    
+def send_order_ready(order_id):
+    order = OrderModel.objects.get(id=order_id)
+    user = order.user.user_id
+    order.status = 'ready'
+    order.save()
+
+    items_text = ""
+    for item in order.order_item.all():
+        items_text += f"📚 {item.book.name}\n"
+
+    send_message = (
+        f"✅ Buyurtma #{order.id} yetkazib berilmoqda!\n\n"
+        f"{items_text}"
+    )
+
+    requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage", params={
+        "chat_id": user,
+        "text": send_message
+    })
+    
+    
+def mark_ready(request, order_id):
+    send_order_ready(order_id)
+    messages.success(request, f"Buyurtma {order_id} tayyor deb belgilandi.")
+    return redirect(request.META.get('HTTP_REFERER', '/admin/'))
+
+    
+

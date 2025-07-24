@@ -11,8 +11,10 @@ from core.apps.havasbook.views import (
     OrderitemView,
     BooksSearchView,
     PreorderView,
-    DeliveryView
+    DeliveryView, toggle_is_discount, mark_ready
 )
+
+
 
 router = DefaultRouter()
 router.register(r"banner", BannerView, basename='banner')
@@ -34,4 +36,9 @@ router.register(r"search", BooksSearchView, basename="search")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path('toggle-discount/<int:pk>/', toggle_is_discount, name='toggle_is_discount'),
+    
+    path('order/<int:order_id>/mark-ready/', mark_ready, name='mark_ready'),
+
+
 ]

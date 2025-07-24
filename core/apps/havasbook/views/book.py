@@ -20,6 +20,17 @@ from django_filters.rest_framework import DjangoFilterBackend
 from core.apps.havasbook.filters.book import BookFilter
 
 
+from django.shortcuts import get_object_or_404, redirect
+
+def toggle_is_discount(request, pk):
+    book = get_object_or_404(BookModel, pk=pk)
+    book.is_discount = not book.is_discount
+    book.save()
+    
+    return redirect(request.META.get('HTTP_REFERER', '/admin/'))
+
+
+
 
 class BooksSearchView(ModelViewSet):
     serializer_class = ListBookSerializer
