@@ -44,7 +44,7 @@ class OrderView(BaseViewSetMixin, ModelViewSet):
     filterset_class = OrderFilter
     pagination_class = CustomPagination
 
-    filter_backends = [DjangoFilterBackend]  # ✅ SHART
+    filter_backends = [DjangoFilterBackend]  
 
     action_permission_classes = {}
     action_serializer_class = {

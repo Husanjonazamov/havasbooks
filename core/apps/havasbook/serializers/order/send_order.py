@@ -6,8 +6,11 @@ from config.env import env
 from .delivery_date import get_delivery_date
 import requests
 
+
+
 BOT_TOKEN = env("BOT_TOKEN")
 CHANNEL_ID = env.int("CHANNEL_ID")
+
 
 
 bot = telebot.TeleBot(token=BOT_TOKEN)

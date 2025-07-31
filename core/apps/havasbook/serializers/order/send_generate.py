@@ -6,6 +6,7 @@ PAYME_ID = env.str("PAYME_ID")
 PAYME_KEY = env.str("PAYME_KEY")
 BOT_TOKEN = env.str("BOT_TOKEN")
 
+
 payme = Payme(
     payme_id=PAYME_ID,
     payme_key=PAYME_KEY
@@ -29,20 +30,20 @@ def send_payment_link(order):
             amount=1000,
             return_url="https://t.me/Havas_book_bot"
         )
-    elif payment_type == "paynet":
-        message_text = "📌 Bu Paynet: https://paynet.uz/"
-        requests.post(
-            url=f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-            json={"chat_id": user_id, "text": message_text}
-        )
-        return
-    else:
-        message_text = "📌 Bu Uzum card: https://uzum.uz/"
-        requests.post(
-            url=f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-            json={"chat_id": user_id, "text": message_text}
-        )
-        return
+    # elif payment_type == "paynet":
+    #     message_text = "📌 Bu Paynet: https://paynet.uz/"
+    #     requests.post(
+    #         url=f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+    #         json={"chat_id": user_id, "text": message_text}
+    #     )
+    #     return
+    # else:
+    #     message_text = "📌 Bu Uzum card: https://uzum.uz/"
+    #     requests.post(
+    #         url=f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+    #         json={"chat_id": user_id, "text": message_text}
+    #     )
+    #     return
 
     message_text = (
         "🛒 Hurmatli mijoz!\n\n"

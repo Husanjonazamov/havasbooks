@@ -10,7 +10,7 @@ from core.apps.havasbook.models.location import LocationModel
 from core.apps.havasbook.models.delivery import DeliveryModel
 from core.apps.havasbook.serializers.order.orderITem import OrderItemSerializers, ListOrderItemSerializers
 from core.apps.havasbook.models.cart import CartitemModel, CartModel
-from core.apps.havasbook.serializers.order.send_generate import send_payment_link
+from core.apps.havasbook.serializers.order.send_generate import payme
 
 
 class BaseOrderSerializer(serializers.ModelSerializer):
@@ -81,8 +81,11 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             'payment_method',
             'comment',
             'order_type',
+            "payment_link",
             'order_item'
         ]
+
+
 
     def create(self, validated_data):
         location_data = validated_data.pop('location')
@@ -138,8 +141,28 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             latitude=location.lat,
             longitude=location.long
         )
-        send_payment_link(order)
-
+        
+        payment_type = validated_data.get("payment_method")
+        
+        order_id = order.id
+        amount = order.total_price
+        
+        if payment_type == "payme":
+            pay_link = payme.initializer.generate_pay_link(
+                id=int(order_id),
+                amount=amount,
+                return_url="https://orient_books_bot"
+            )
+            
+        elif payment_type == "click":
+            pay_link = payme.initializer.generate_pay_link(
+                id=1,
+                amount=1000,
+                return_url="https://orient_books_bot"
+            )
+            
+        order.payment_link = pay_link
+        
         return order
 
 
