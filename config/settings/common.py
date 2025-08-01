@@ -248,3 +248,6 @@ CLICK_MERCHANT_ID = env("CLICK_MERCHANT_ID")
 CLICK_SECRET_KEY = env("CLICK_SECRET_KEY")
 CLICK_ACCOUNT_MODEL = "core.apps.havasbook.models.order.OrderModel"
 CLICK_AMOUNT_FIELD = "total_price"
+
+CLICK_COMMISSION_PERCENT = "(optional int field) your companies comission percent if applicable"
+CLICK_DISABLE_ADMIN = False # (optionally configuration if you want to disable change to True)
