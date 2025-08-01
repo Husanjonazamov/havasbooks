@@ -22,7 +22,9 @@ payme = Payme(
     payme_key=PAYME_KEY
 )
 
-click_up = ClickUp(service_id=env.int("CLICK_SERVICE_ID"), merchant_id=env.int("CLICK_MERCHANT_ID")) # alternatively you can use settings variables as well here.
+CLICK_SERVICE_ID=79536
+CLICK_MERCHANT_ID=39489
+click_up = ClickUp(service_id=CLICK_SERVICE_ID, merchant_id=CLICK_MERCHANT_ID) # alternatively you can use settings variables as well here.
 
 
 
@@ -243,9 +245,9 @@ PAYME_ACCOUNT_MODEL = "core.apps.havasbook.models.order.OrderModel"
 PAYME_ONE_TIME_PAYMENT = True
 
 
-CLICK_SERVICE_ID = env.int("CLICK_SERVICE_ID")
-CLICK_MERCHANT_ID = env.int("CLICK_MERCHANT_ID")
-CLICK_SECRET_KEY = env.str("CLICK_SECRET_KEY")
-CLICK_USER_ID = env.int("CLICK_USER_ID")
+CLICK_SERVICE_ID=79536
+CLICK_MERCHANT_ID=39489
+CLICK_SECRET_KEY='SBz0MYADzpE'
+CLICK_USER_ID=61619
 CLICK_ACCOUNT_MODEL = "core.apps.havasbook.models.order.OrderModel"
 CLICK_AMOUNT_FIELD = "total"
