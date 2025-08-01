@@ -22,7 +22,7 @@ payme = Payme(
     payme_key=PAYME_KEY
 )
 
-click_up = ClickUp(service_id=env.int("CLICK_SERVICE_ID"), merchant_id=env.int("CLICK_MERCHANT_ID")) # alternatively you can use settings variables as well here.
+click_up = ClickUp(service_id=env("CLICK_SERVICE_ID"), merchant_id=env("CLICK_MERCHANT_ID")) # alternatively you can use settings variables as well here.
 
 
 
