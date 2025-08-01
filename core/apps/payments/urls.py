@@ -9,6 +9,7 @@ router = DefaultRouter()
 urlpatterns = [
     path("", include(router.urls)),
     path("payment/update/", PaymeCallBackAPIView.as_view()),
-    path("click/update/", ClickWebhookAPIView.as_view()),
+    path("payment/click/update/", ClickWebhookAPIView.as_view()),
+
     
 ]

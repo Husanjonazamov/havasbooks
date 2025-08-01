@@ -25,10 +25,9 @@ env = environ.Env(
     ADMIN_ID=(str, "TOKEN"),
     WEB_APP_URL=(str, "TOKEN"),
     
-    CLICK_SERVICE_ID=(int, "TOKEN"),
-    CLICK_MERCHANT_ID=(int, "TOKEN"),
+    CLICK_SERVICE_ID=(str, "TOKEN"),
+    CLICK_MERCHANT_ID=(str, "TOKEN"),
     CLICK_SECRET_KEY=(str, "TOKEN"),
-    CLICK_USER_ID=(int, "TOKEN"),
     
     CHANNEL_ID=(str, "TOKEN"),
     PAYME_ID=(str, "TOKEN"),
