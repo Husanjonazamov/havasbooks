@@ -8,6 +8,21 @@ from config.conf.modules import MODULES
 from config.env import env
 from django.utils.translation import gettext_lazy as _
 from rich.traceback import install
+from click_up import ClickUp
+from payme import Payme
+
+
+PAYME_ID = env.str("PAYME_ID")
+PAYME_KEY = env.str("PAYME_KEY")
+BOT_TOKEN = env.str("BOT_TOKEN")
+
+
+payme = Payme(
+    payme_id=PAYME_ID,
+    payme_key=PAYME_KEY
+)
+
+click_up = ClickUp(service_id=env.int("CLICK_SERVICE_ID"), merchant_id=env.int("CLICK_MERCHANT_ID")) # alternatively you can use settings variables as well here.
 
 
 
@@ -226,3 +241,11 @@ PAYME_ACCOUNT_FIELD = "order_id"
 PAYME_AMOUNT_FIELD = "total_price"
 PAYME_ACCOUNT_MODEL = "core.apps.havasbook.models.order.OrderModel"
 PAYME_ONE_TIME_PAYMENT = True
+
+
+CLICK_SERVICE_ID = env.int("CLICK_SERVICE_ID")
+CLICK_MERCHANT_ID = env.int("CLICK_MERCHANT_ID")
+CLICK_SECRET_KEY = env.str("CLICK_SECRET_KEY")
+CLICK_USER_ID = env.int("CLICK_USER_ID")
+CLICK_ACCOUNT_MODEL = "core.apps.havasbook.models.order.OrderModel"
+CLICK_AMOUNT_FIELD = "total"

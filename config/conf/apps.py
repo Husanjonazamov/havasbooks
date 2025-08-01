@@ -10,6 +10,7 @@ APPS = [
     "rest_framework",
     "corsheaders",
     "payme",
+    "click_up",
     "django_filters",
     "django_redis",
     "rest_framework_simplejwt",

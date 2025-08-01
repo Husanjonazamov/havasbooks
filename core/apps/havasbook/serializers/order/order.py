@@ -10,7 +10,26 @@ from core.apps.havasbook.models.location import LocationModel
 from core.apps.havasbook.models.delivery import DeliveryModel
 from core.apps.havasbook.serializers.order.orderITem import OrderItemSerializers, ListOrderItemSerializers
 from core.apps.havasbook.models.cart import CartitemModel, CartModel
-from core.apps.havasbook.serializers.order.send_generate import payme
+from config.settings.common import payme, click_up
+
+
+from config.env import env
+from click_up import ClickUp
+from payme import Payme
+
+
+PAYME_ID = env.str("PAYME_ID")
+PAYME_KEY = env.str("PAYME_KEY")
+BOT_TOKEN = env.str("BOT_TOKEN")
+
+
+payme = Payme(
+    payme_id=PAYME_ID,
+    payme_key=PAYME_KEY
+)
+
+click_up = ClickUp(service_id=env.int("CLICK_SERVICE_ID"), merchant_id=env.int("CLICK_MERCHANT_ID")) # alternatively you can use settings variables as well here.
+
 
 
 class BaseOrderSerializer(serializers.ModelSerializer):
@@ -155,10 +174,11 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             )
             
         elif payment_type == "click":
-            pay_link = payme.initializer.generate_pay_link(
-                id=1,
-                amount=1000,
+            pay_link = click_up.initializer.generate_pay_link(
+                id=int(order_id),
+                amount=amount,
                 return_url="https://orient_books_bot"
+                
             )
             
         order.payment_link = pay_link

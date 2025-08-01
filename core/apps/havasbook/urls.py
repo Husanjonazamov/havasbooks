@@ -11,9 +11,9 @@ from core.apps.havasbook.views import (
     OrderitemView,
     BooksSearchView,
     PreorderView,
-    DeliveryView, toggle_is_discount, mark_ready
+    DeliveryView, toggle_is_discount, mark_ready, 
 )
-
+# from core.apps.havasbook.views.send import mark_ready_view
 
 
 router = DefaultRouter()
@@ -39,6 +39,7 @@ urlpatterns = [
     path('toggle-discount/<int:pk>/', toggle_is_discount, name='toggle_is_discount'),
     
     path('order/<int:order_id>/mark-ready/', mark_ready, name='mark_ready'),
+    # path("mark-ready/<int:pk>/", mark_ready_view, name="mark-ready")
 
 
 ]
