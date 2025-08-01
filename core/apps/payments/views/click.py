@@ -1,6 +1,10 @@
 from click_up.views import ClickWebhook
 
 
+
+
+
+
 class ClickWebhookAPIView(ClickWebhook):
     def successfully_payment(self, params):
         """
