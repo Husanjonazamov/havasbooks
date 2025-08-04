@@ -165,7 +165,8 @@ class CreateOrderSerializer(serializers.ModelSerializer):
                 return_url="https://orient_books_bot"
                 
             )
-            
+        
+        print(pay_link)
         order.payment_link = pay_link
         
         return order
