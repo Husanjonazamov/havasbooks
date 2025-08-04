@@ -10,7 +10,7 @@ from core.apps.havasbook.models.location import LocationModel
 from core.apps.havasbook.models.delivery import DeliveryModel
 from core.apps.havasbook.serializers.order.orderITem import OrderItemSerializers, ListOrderItemSerializers
 from core.apps.havasbook.models.cart import CartitemModel, CartModel
-from django.conf import settings
+from .payment_env import click_up, payme
 
 
 
@@ -150,14 +150,14 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         order_id = order.id
         amount = order.total_price
         if payment_type == "payme":
-            pay_link = settings.payme.initializer.generate_pay_link(
+            pay_link = payme.initializer.generate_pay_link(
                 id=int(order_id),
                 amount=amount,
                 return_url="https://orient_books_bot"
             )
             
         elif payment_type == "click":
-            pay_link = settings.click_up.initializer.generate_pay_link(
+            pay_link = click_up.initializer.generate_pay_link(
                 id=int(order_id),
                 amount=amount,
                 return_url="https://orient_books_bot"
