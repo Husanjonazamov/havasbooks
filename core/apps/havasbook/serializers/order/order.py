@@ -10,24 +10,9 @@ from core.apps.havasbook.models.location import LocationModel
 from core.apps.havasbook.models.delivery import DeliveryModel
 from core.apps.havasbook.serializers.order.orderITem import OrderItemSerializers, ListOrderItemSerializers
 from core.apps.havasbook.models.cart import CartitemModel, CartModel
+from django.conf import settings
 
 
-from config.env import env
-from click_up import ClickUp
-from payme import Payme
-
-
-PAYME_ID = env.str("PAYME_ID")
-PAYME_KEY = env.str("PAYME_KEY")
-BOT_TOKEN = env.str("BOT_TOKEN")
-
-
-payme = Payme(
-    payme_id=PAYME_ID,
-    payme_key=PAYME_KEY
-)
-
-click_up = ClickUp(service_id=env.int("CLICK_SERVICE_ID"), merchant_id=env.int("CLICK_MERCHANT_ID")) # alternatively you can use settings variables as well here.
 
 
 
@@ -164,16 +149,15 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         
         order_id = order.id
         amount = order.total_price
-        
         if payment_type == "payme":
-            pay_link = payme.initializer.generate_pay_link(
+            pay_link = settings.payme.initializer.generate_pay_link(
                 id=int(order_id),
                 amount=amount,
                 return_url="https://orient_books_bot"
             )
             
         elif payment_type == "click":
-            pay_link = click_up.initializer.generate_pay_link(
+            pay_link = settings.click_up.initializer.generate_pay_link(
                 id=int(order_id),
                 amount=amount,
                 return_url="https://orient_books_bot"
