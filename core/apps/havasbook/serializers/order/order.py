@@ -148,7 +148,9 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         payment_type = validated_data.get("payment_method")
         
         order_id = order.id
-        amount = order.total_price
+        amount = Decimal(order.total_price).quantize(Decimal("1.00"))
+        print(f"--\n\n\n{amount}--\n\n\n") 
+
         if payment_type == "payme":
             pay_link = payme.initializer.generate_pay_link(
                 id=int(order_id),
