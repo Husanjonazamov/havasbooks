@@ -155,14 +155,14 @@ class CreateOrderSerializer(serializers.ModelSerializer):
             pay_link = payme.initializer.generate_pay_link(
                 id=int(order_id),
                 amount=amount,
-                return_url="https://orient_books_bot"
+                return_url="https://t.me/orient_books_bot"
             )
             
         elif payment_type == "click":
             pay_link = click_up.initializer.generate_pay_link(
                 id=int(order_id),
                 amount=amount,
-                return_url="https://orient_books_bot"
+                return_url="https://t.me/orient_books_bot"
                 
             )
         
