@@ -117,7 +117,7 @@ class BookimageModel(AbstractBaseModel):
         BookModel, 
         verbose_name=_("Kitob"), 
         on_delete=models.CASCADE,
-        related_name="images",
+        related_name="book_images",
         null=True, 
         blank=True
     )
